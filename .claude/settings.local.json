@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx shadcn@latest add:*)",
+      "Bash(npx prisma:*)",
+      "Bash(find:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npm run build:*)",
+      "Bash(pkill:*)",
+      "Bash(timeout 10s npm run dev)",
+      "Bash(curl:*)",
+      "Bash(taskkill:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(mkdir:*)",
+      "Bash(npx shadcn add:*)",
+      "Bash(del nul)",
+      "Bash(rm:*)",
+      "Bash(git config:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": []
+  }
+}
