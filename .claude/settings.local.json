@@ -23,7 +23,14 @@
       "Bash(git push:*)",
       "Bash(git remote remove:*)",
       "Bash(git remote add:*)",
-      "Bash(set DATABASE_URL=file:./dev.db)"
+      "Bash(set DATABASE_URL=file:./dev.db)",
+      "Bash(set DATABASE_URL=postgresql://postgres:Luwei2025!@db.fdttyuczrxgsygfppwcz.supabase.co:5432/postgres)",
+      "Bash(npx dotenv -e .env.local -- npx prisma db push:*)",
+      "Bash(dotenv -e .env.local -- npx prisma db push:*)",
+      "Bash(dotenv -f .env.local -- npx prisma db push:*)",
+      "Bash(copy .env.local .env)",
+      "Bash(cp:*)",
+      "Bash(telnet:*)"
     ],
     "deny": []
   }
