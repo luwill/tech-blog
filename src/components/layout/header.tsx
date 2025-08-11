@@ -17,8 +17,13 @@ import { Settings, LogOut, Edit } from "lucide-react"
 import { Role } from "@prisma/client"
 
 export function Header() {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
   const { t } = useLocale()
+  
+  // Debug logging in development
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Header session status:', status, 'session:', session)
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -60,7 +65,9 @@ export function Header() {
           <LocaleToggle />
           <ThemeToggle />
           
-          {session ? (
+          {status === 'loading' ? (
+            <div className="w-8 h-8 rounded-full bg-muted animate-pulse" />
+          ) : session ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">

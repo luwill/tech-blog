@@ -16,7 +16,7 @@ export const authOptions: NextAuthOptions = {
   debug: process.env.NODE_ENV === 'development',
   callbacks: {
     async session({ session, user }) {
-      if (session?.user) {
+      if (session?.user && user) {
         session.user.id = user.id
         session.user.role = (user as { role: Role }).role
       }
@@ -25,6 +25,12 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user }) {
       if (!user.email) return false
       return true
+    },
+    async redirect({ url, baseUrl }) {
+      // Redirect to the original URL after sign in
+      if (url.startsWith("/")) return `${baseUrl}${url}`
+      else if (new URL(url).origin === baseUrl) return url
+      return baseUrl
     },
   },
   events: {
