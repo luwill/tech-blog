@@ -23,20 +23,34 @@ export const authOptions: NextAuthOptions = {
     },
     async signIn({ user }) {
       if (!user.email) return false
-      
-      // Check if this is the admin user
-      const isAdmin = user.email === process.env.ADMIN_EMAIL
-      
-      // Update user role if they are the admin
-      if (isAdmin && user.id) {
-        await db.user.update({
-          where: { id: user.id },
-          data: { role: Role.ADMIN }
-        })
-      }
-      
       return true
     },
+  },
+  events: {
+    async signIn({ user, isNewUser }) {
+      // Only update role after user is created
+      if (user.email && user.id) {
+        const isAdmin = user.email === process.env.ADMIN_EMAIL
+        
+        if (isAdmin) {
+          try {
+            // Use upsert to handle both new and existing users
+            await db.user.upsert({
+              where: { id: user.id },
+              update: { role: Role.ADMIN },
+              create: {
+                id: user.id,
+                email: user.email,
+                name: user.name,
+                role: Role.ADMIN
+              }
+            })
+          } catch (error) {
+            console.error('Failed to update user role:', error)
+          }
+        }
+      }
+    }
   },
   pages: {
     signIn: '/auth/signin',
