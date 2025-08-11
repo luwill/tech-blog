@@ -18,7 +18,7 @@
       ]
     },
     {
-      "source": "/(.*\\.(jpg|jpeg|png|gif|webp|svg|ico))",
+      "source": "/(.*\\.(jpg|jpeg|png|gif|webp|svg|ico))$",
       "headers": [
         {
           "key": "Cache-Control",
@@ -66,12 +66,5 @@
       "destination": "https://www.louwill.com/admin/$1",
       "permanent": true
     }
-  ],
-  "env": {
-    "DATABASE_URL": "@database_url",
-    "NEXTAUTH_URL": "@nextauth_url",
-    "NEXTAUTH_SECRET": "@nextauth_secret",
-    "NEXT_PUBLIC_BASE_URL": "@next_public_base_url",
-    "ADMIN_EMAIL": "@admin_email"
-  }
+  ]
 }
