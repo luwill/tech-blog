@@ -13,6 +13,7 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
+  debug: process.env.NODE_ENV === 'development',
   callbacks: {
     async session({ session, user }) {
       if (session?.user) {
@@ -27,27 +28,17 @@ export const authOptions: NextAuthOptions = {
     },
   },
   events: {
-    async signIn({ user, isNewUser }) {
+    async signIn({ user }) {
       // Only update role after user is created
-      if (user.email && user.id) {
-        const isAdmin = user.email === process.env.ADMIN_EMAIL
-        
-        if (isAdmin) {
-          try {
-            // Use upsert to handle both new and existing users
-            await db.user.upsert({
-              where: { id: user.id },
-              update: { role: Role.ADMIN },
-              create: {
-                id: user.id,
-                email: user.email,
-                name: user.name,
-                role: Role.ADMIN
-              }
-            })
-          } catch (error) {
-            console.error('Failed to update user role:', error)
-          }
+      if (user.email === process.env.ADMIN_EMAIL && user.id) {
+        try {
+          await db.user.update({
+            where: { id: user.id },
+            data: { role: Role.ADMIN }
+          })
+          console.log('Admin role assigned to user:', user.email)
+        } catch (error) {
+          console.error('Failed to update user role:', error)
         }
       }
     }

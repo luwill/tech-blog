@@ -8,8 +8,9 @@ CREATE TYPE "Role" AS ENUM ('ADMIN', 'VISITOR');
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
+    "emailVerified" TIMESTAMP(3),
     "name" TEXT,
-    "avatar" TEXT,
+    "image" TEXT,
     "role" "Role" NOT NULL DEFAULT 'VISITOR',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
