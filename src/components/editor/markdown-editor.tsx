@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect, useRef } from "react"
 import dynamic from "next/dynamic"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ImageUpload } from "@/components/ui/image-upload"
-import { X, Plus, Save, Eye, Edit3, Image as ImageIcon } from "lucide-react"
+import { X, Plus, Save, Eye, Edit3, Image as ImageIcon, Clock, CheckCircle2 } from "lucide-react"
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 
@@ -31,7 +31,15 @@ interface MarkdownEditorProps {
     tags: string[]
     category: string
   }) => void
+  onAutoSave?: (data: {
+    title: string
+    content: string
+    excerpt: string
+    tags: string[]
+    category: string
+  }) => Promise<void>
   isLoading?: boolean
+  autoSaveInterval?: number // in milliseconds, default 30 seconds
 }
 
 export function MarkdownEditor({
@@ -41,7 +49,9 @@ export function MarkdownEditor({
   initialTags = [],
   initialCategory = "",
   onSave,
-  isLoading = false
+  onAutoSave,
+  isLoading = false,
+  autoSaveInterval = 30000 // 30 seconds
 }: MarkdownEditorProps) {
   const [title, setTitle] = useState(initialTitle)
   const [content, setContent] = useState(initialContent)
@@ -51,6 +61,11 @@ export function MarkdownEditor({
   const [newTag, setNewTag] = useState("")
   const [preview, setPreview] = useState(false)
   const [showImageUpload, setShowImageUpload] = useState(false)
+  const [lastSaved, setLastSaved] = useState<Date | null>(null)
+  const [autoSaving, setAutoSaving] = useState(false)
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
+  const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const lastAutoSaveDataRef = useRef<string>("")
 
   const handleSave = useCallback(() => {
     if (onSave) {
@@ -61,8 +76,73 @@ export function MarkdownEditor({
         tags,
         category
       })
+      setLastSaved(new Date())
+      setHasUnsavedChanges(false)
     }
   }, [title, content, excerpt, tags, category, onSave])
+
+  const handleAutoSave = useCallback(async () => {
+    if (!onAutoSave || autoSaving) return
+
+    const currentData = {
+      title,
+      content,
+      excerpt,
+      tags,
+      category
+    }
+
+    const currentDataString = JSON.stringify(currentData)
+    
+    // 只有当数据真正改变时才自动保存
+    if (currentDataString === lastAutoSaveDataRef.current) return
+
+    try {
+      setAutoSaving(true)
+      await onAutoSave(currentData)
+      setLastSaved(new Date())
+      setHasUnsavedChanges(false)
+      lastAutoSaveDataRef.current = currentDataString
+    } catch (error) {
+      console.error('Auto-save failed:', error)
+    } finally {
+      setAutoSaving(false)
+    }
+  }, [title, content, excerpt, tags, category, onAutoSave, autoSaving])
+
+  // 监听内容变化，标记为未保存
+  useEffect(() => {
+    const currentDataString = JSON.stringify({ title, content, excerpt, tags, category })
+    if (currentDataString !== lastAutoSaveDataRef.current && lastAutoSaveDataRef.current !== "") {
+      setHasUnsavedChanges(true)
+    }
+  }, [title, content, excerpt, tags, category])
+
+  // 自动保存定时器
+  useEffect(() => {
+    if (!onAutoSave) return
+
+    // 清除之前的定时器
+    if (autoSaveTimeoutRef.current) {
+      clearTimeout(autoSaveTimeoutRef.current)
+    }
+
+    // 设置新的定时器
+    autoSaveTimeoutRef.current = setTimeout(() => {
+      handleAutoSave()
+    }, autoSaveInterval)
+
+    return () => {
+      if (autoSaveTimeoutRef.current) {
+        clearTimeout(autoSaveTimeoutRef.current)
+      }
+    }
+  }, [title, content, excerpt, tags, category, handleAutoSave, autoSaveInterval, onAutoSave])
+
+  // 初始化时设置基准数据
+  useEffect(() => {
+    lastAutoSaveDataRef.current = JSON.stringify({ title: initialTitle, content: initialContent, excerpt: initialExcerpt, tags: initialTags, category: initialCategory })
+  }, [initialTitle, initialContent, initialExcerpt, initialTags, initialCategory])
 
   const addTag = useCallback(() => {
     if (newTag.trim() && !tags.includes(newTag.trim())) {
@@ -93,7 +173,28 @@ export function MarkdownEditor({
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Write New Post</h2>
+        <div className="flex items-center space-x-4">
+          <h2 className="text-2xl font-bold">Write New Post</h2>
+          {/* Auto-save status */}
+          <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+            {autoSaving ? (
+              <>
+                <Clock className="h-4 w-4 animate-spin" />
+                <span>Auto-saving...</span>
+              </>
+            ) : hasUnsavedChanges ? (
+              <>
+                <div className="h-2 w-2 rounded-full bg-orange-500" />
+                <span>Unsaved changes</span>
+              </>
+            ) : lastSaved ? (
+              <>
+                <CheckCircle2 className="h-4 w-4 text-green-500" />
+                <span>Saved at {lastSaved.toLocaleTimeString()}</span>
+              </>
+            ) : null}
+          </div>
+        </div>
         <div className="flex items-center space-x-2">
           <Button
             type="button"

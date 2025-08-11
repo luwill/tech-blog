@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { HeaderSimple } from '@/components/layout/header-simple'
 import { Footer } from '@/components/layout/footer'
+import { useLocale } from '@/components/providers/locale-provider'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -52,6 +53,7 @@ interface Category {
 }
 
 export default function BlogPage() {
+  const { t } = useLocale()
   const [posts, setPosts] = useState<Post[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
@@ -136,19 +138,19 @@ export default function BlogPage() {
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center space-y-6">
               <h1 className="text-4xl md:text-5xl font-bold">
-                My Tech Blog
+                {t.myTechBlog}
               </h1>
               <p className="text-xl text-muted-foreground">
-                Exploring AI, algorithms, and technology through practical insights and honest reviews
+                {t.blogDescription}
               </p>
               <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <BookOpen className="h-4 w-4" />
-                  <span>{posts.filter(p => p.published).length} articles</span>
+                  <span>{posts.filter(p => p.published).length} {t.articles}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Filter className="h-4 w-4" />
-                  <span>{categories.length} categories</span>
+                  <span>{categories.length} {t.categories}</span>
                 </div>
               </div>
             </div>
@@ -163,7 +165,7 @@ export default function BlogPage() {
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                   <Input
-                    placeholder="Search articles..."
+                    placeholder={t.searchArticles}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="pl-10"
@@ -177,7 +179,7 @@ export default function BlogPage() {
                     <SelectValue placeholder="Category" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Categories</SelectItem>
+                    <SelectItem value="all">{t.allCategories}</SelectItem>
                     {categories.map((category) => (
                       <SelectItem key={category.id} value={category.slug}>
                         {category.name}
@@ -191,10 +193,10 @@ export default function BlogPage() {
                     <SelectValue placeholder="Sort by" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="newest">Newest</SelectItem>
-                    <SelectItem value="oldest">Oldest</SelectItem>
-                    <SelectItem value="popular">Most Popular</SelectItem>
-                    <SelectItem value="reading-time">Reading Time</SelectItem>
+                    <SelectItem value="newest">{t.newest}</SelectItem>
+                    <SelectItem value="oldest">{t.oldest}</SelectItem>
+                    <SelectItem value="popular">{t.mostPopular}</SelectItem>
+                    <SelectItem value="reading-time">{t.readingTime}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -220,8 +222,8 @@ export default function BlogPage() {
               {featuredPosts.length > 0 && (
                 <section className="mb-16">
                   <div className="flex items-center gap-2 mb-8">
-                    <h2 className="text-2xl font-bold">Featured Articles</h2>
-                    <Badge variant="secondary">Featured</Badge>
+                    <h2 className="text-2xl font-bold">{t.featuredArticles}</h2>
+                    <Badge variant="secondary">{t.featured}</Badge>
                   </div>
                   <div className="grid md:grid-cols-2 gap-8">
                     {featuredPosts.map((post) => (
@@ -234,7 +236,7 @@ export default function BlogPage() {
                             {post.category && (
                               <Badge variant="outline">{post.category.name}</Badge>
                             )}
-                            <Badge>Featured</Badge>
+                            <Badge>{t.featured}</Badge>
                           </div>
                           <CardTitle className="group-hover:text-primary transition-colors">
                             <Link href={`/blog/${post.slug}`}>
@@ -254,7 +256,7 @@ export default function BlogPage() {
                               </div>
                               <div className="flex items-center gap-1">
                                 <Clock className="h-4 w-4" />
-                                <span>{post.readTime || 5} min read</span>
+                                <span>{post.readTime || 5} {t.minRead}</span>
                               </div>
                               <div className="flex items-center gap-1">
                                 <Eye className="h-4 w-4" />
@@ -263,7 +265,7 @@ export default function BlogPage() {
                             </div>
                             <Button variant="ghost" size="sm" asChild>
                               <Link href={`/blog/${post.slug}`}>
-                                Read more
+                                {t.readMore}
                                 <ArrowRight className="h-4 w-4 ml-1" />
                               </Link>
                             </Button>
@@ -279,7 +281,7 @@ export default function BlogPage() {
               {regularPosts.length > 0 ? (
                 <section>
                   <h2 className="text-2xl font-bold mb-8">
-                    {featuredPosts.length > 0 ? 'All Articles' : 'Latest Articles'}
+                    {featuredPosts.length > 0 ? t.allArticles : t.latestArticles}
                   </h2>
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {regularPosts.map((post) => (
@@ -318,7 +320,7 @@ export default function BlogPage() {
                               </div>
                               <div className="flex items-center gap-1">
                                 <Clock className="h-3 w-3" />
-                                <span>{post.readTime || 5}min</span>
+                                <span>{post.readTime || 5}{t.minRead}</span>
                               </div>
                             </div>
                             <div className="flex items-center gap-1">
@@ -334,11 +336,11 @@ export default function BlogPage() {
               ) : (
                 <div className="text-center py-16">
                   <BookOpen className="h-16 w-16 mx-auto text-muted-foreground/40 mb-4" />
-                  <h3 className="text-xl font-semibold mb-2">No articles found</h3>
+                  <h3 className="text-xl font-semibold mb-2">{t.noArticlesFound}</h3>
                   <p className="text-muted-foreground mb-6">
                     {searchQuery || selectedCategory !== 'all' 
-                      ? 'Try adjusting your search or filter criteria'
-                      : 'No articles have been published yet'
+                      ? t.tryAdjusting
+                      : t.noPublished
                     }
                   </p>
                   {(searchQuery || selectedCategory !== 'all') && (
@@ -349,7 +351,7 @@ export default function BlogPage() {
                         setSelectedCategory('all')
                       }}
                     >
-                      Clear filters
+                      {t.clearFilters}
                     </Button>
                   )}
                 </div>
@@ -358,14 +360,14 @@ export default function BlogPage() {
               {/* Categories Section */}
               {categories.length > 0 && (
                 <section className="mt-16 pt-16 border-t">
-                  <h2 className="text-2xl font-bold mb-8">Browse by Category</h2>
+                  <h2 className="text-2xl font-bold mb-8">{t.browseByCategory}</h2>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {categories.map((category) => (
                       <Card key={category.id} className="hover:shadow-md transition-shadow cursor-pointer">
                         <CardContent className="p-4 text-center">
                           <h3 className="font-semibold">{category.name}</h3>
                           <p className="text-sm text-muted-foreground">
-                            {posts.filter(p => p.category?.slug === category.slug && p.published).length} articles
+                            {posts.filter(p => p.category?.slug === category.slug && p.published).length} {t.articles}
                           </p>
                         </CardContent>
                       </Card>

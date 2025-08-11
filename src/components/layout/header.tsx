@@ -4,6 +4,8 @@ import Link from "next/link"
 import { useSession, signOut } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
+import { LocaleToggle } from "@/components/ui/locale-toggle"
+import { useLocale } from "@/components/providers/locale-provider"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +18,7 @@ import { Role } from "@prisma/client"
 
 export function Header() {
   const { data: session } = useSession()
+  const { t } = useLocale()
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -36,24 +39,25 @@ export function Header() {
             href="/" 
             className="text-sm font-medium transition-colors hover:text-primary"
           >
-            Home
+            {t.home}
           </Link>
           <Link 
             href="/blog" 
             className="text-sm font-medium transition-colors hover:text-primary"
           >
-            Blog
+            {t.blog}
           </Link>
           <Link 
             href="/about" 
             className="text-sm font-medium transition-colors hover:text-primary"
           >
-            About
+            {t.about}
           </Link>
         </nav>
 
         {/* Right side */}
         <div className="flex items-center space-x-4">
+          <LocaleToggle />
           <ThemeToggle />
           
           {session ? (
@@ -87,7 +91,7 @@ export function Header() {
                     <DropdownMenuItem asChild>
                       <Link href="/admin">
                         <Settings className="mr-2 h-4 w-4" />
-                        <span>Admin Dashboard</span>
+                        <span>{t.admin} Dashboard</span>
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
@@ -108,13 +112,13 @@ export function Header() {
                   }}
                 >
                   <LogOut className="mr-2 h-4 w-4" />
-                  <span>Log out</span>
+                  <span>{t.signOut}</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
             <Button asChild variant="default">
-              <Link href="/auth/signin">Sign In</Link>
+              <Link href="/auth/signin">{t.signIn}</Link>
             </Button>
           )}
         </div>

@@ -68,6 +68,7 @@ src/
 - Occupation: Algorithm Engineer / AI Full Stack Developer
 - Github: https://github.com/luwill
 - Domain: https://www.louwill.com/
+- Email: ygnjd2016@gmail.com
 
 ## Key Features to Implement
 

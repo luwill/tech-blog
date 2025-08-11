@@ -6,10 +6,16 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
+import { LocaleToggle } from "@/components/ui/locale-toggle"
+import { useLocale } from "@/components/providers/locale-provider"
+import { useSession } from "next-auth/react"
+import { Role } from "@prisma/client"
 import { Search, X } from "lucide-react"
 
 export function HeaderSimple() {
   const router = useRouter()
+  const { t } = useLocale()
+  const { data: session } = useSession()
   const [searchQuery, setSearchQuery] = useState("")
   const [showSearch, setShowSearch] = useState(false)
 
@@ -41,19 +47,19 @@ export function HeaderSimple() {
             href="/" 
             className="text-sm font-medium transition-colors hover:text-primary"
           >
-            Home
+            {t.home}
           </Link>
           <Link 
             href="/blog" 
             className="text-sm font-medium transition-colors hover:text-primary"
           >
-            Blog
+            {t.blog}
           </Link>
           <Link 
             href="/about" 
             className="text-sm font-medium transition-colors hover:text-primary"
           >
-            About
+            {t.about}
           </Link>
         </nav>
 
@@ -63,7 +69,7 @@ export function HeaderSimple() {
             <form onSubmit={handleSearch} className="flex gap-2">
               <Input
                 type="text"
-                placeholder="Search articles..."
+                placeholder={t.search + " articles..."}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="flex-1"
@@ -93,7 +99,7 @@ export function HeaderSimple() {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
               type="text"
-              placeholder="Search articles..."
+              placeholder={t.search + " articles..."}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10 w-full"
@@ -113,10 +119,19 @@ export function HeaderSimple() {
             <Search className="h-4 w-4" />
           </Button>
           
+          <LocaleToggle />
           <ThemeToggle />
-          <Button asChild variant="default" className="hidden sm:inline-flex">
-            <Link href="/admin">Admin</Link>
-          </Button>
+          
+          {/* Auth buttons */}
+          {session?.user?.role === Role.ADMIN ? (
+            <Button asChild variant="default" className="hidden sm:inline-flex">
+              <Link href="/admin">{t.admin}</Link>
+            </Button>
+          ) : (
+            <Button asChild variant="outline" size="sm" className="hidden sm:inline-flex">
+              <Link href="/auth/signin">Login</Link>
+            </Button>
+          )}
         </div>
       </div>
     </header>
