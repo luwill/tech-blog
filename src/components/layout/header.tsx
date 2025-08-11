@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { useSession, signOut } from "next-auth/react"
+import { useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { LocaleToggle } from "@/components/ui/locale-toggle"
@@ -17,8 +18,15 @@ import { Settings, LogOut, Edit } from "lucide-react"
 import { Role } from "@prisma/client"
 
 export function Header() {
-  const { data: session, status } = useSession()
+  const { data: session, status, update } = useSession()
   const { t } = useLocale()
+  
+  // Force session update on component mount
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      update()
+    }
+  }, [status, update])
   
   // Debug logging in development
   if (process.env.NODE_ENV === 'development') {
