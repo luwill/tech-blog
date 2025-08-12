@@ -24,12 +24,16 @@ interface MarkdownEditorProps {
   initialExcerpt?: string
   initialTags?: string[]
   initialCategory?: string
+  initialFeatured?: boolean
+  initialPublished?: boolean
   onSave?: (data: {
     title: string
     content: string
     excerpt: string
     tags: string[]
     category: string
+    featured: boolean
+    published: boolean
   }) => void
   onAutoSave?: (data: {
     title: string
@@ -37,6 +41,8 @@ interface MarkdownEditorProps {
     excerpt: string
     tags: string[]
     category: string
+    featured: boolean
+    published: boolean
   }) => Promise<void>
   isLoading?: boolean
   autoSaveInterval?: number // in milliseconds, default 30 seconds
@@ -48,6 +54,8 @@ export function MarkdownEditor({
   initialExcerpt = "",
   initialTags = [],
   initialCategory = "",
+  initialFeatured = false,
+  initialPublished = true,
   onSave,
   onAutoSave,
   isLoading = false,
@@ -60,6 +68,8 @@ export function MarkdownEditor({
   const [category, setCategory] = useState(initialCategory)
   const [newTag, setNewTag] = useState("")
   const [preview, setPreview] = useState(false)
+  const [featured, setFeatured] = useState(initialFeatured)
+  const [published, setPublished] = useState(initialPublished)
   const [showImageUpload, setShowImageUpload] = useState(false)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
   const [autoSaving, setAutoSaving] = useState(false)
@@ -74,12 +84,14 @@ export function MarkdownEditor({
         content,
         excerpt,
         tags,
-        category
+        category,
+        featured,
+        published
       })
       setLastSaved(new Date())
       setHasUnsavedChanges(false)
     }
-  }, [title, content, excerpt, tags, category, onSave])
+  }, [title, content, excerpt, tags, category, featured, published, onSave])
 
   const handleAutoSave = useCallback(async () => {
     if (!onAutoSave || autoSaving) return
@@ -89,7 +101,9 @@ export function MarkdownEditor({
       content,
       excerpt,
       tags,
-      category
+      category,
+      featured,
+      published
     }
 
     const currentDataString = JSON.stringify(currentData)
@@ -108,15 +122,15 @@ export function MarkdownEditor({
     } finally {
       setAutoSaving(false)
     }
-  }, [title, content, excerpt, tags, category, onAutoSave, autoSaving])
+  }, [title, content, excerpt, tags, category, featured, published, onAutoSave, autoSaving])
 
   // 监听内容变化，标记为未保存
   useEffect(() => {
-    const currentDataString = JSON.stringify({ title, content, excerpt, tags, category })
+    const currentDataString = JSON.stringify({ title, content, excerpt, tags, category, featured, published })
     if (currentDataString !== lastAutoSaveDataRef.current && lastAutoSaveDataRef.current !== "") {
       setHasUnsavedChanges(true)
     }
-  }, [title, content, excerpt, tags, category])
+  }, [title, content, excerpt, tags, category, featured, published])
 
   // 自动保存定时器
   useEffect(() => {
@@ -137,12 +151,12 @@ export function MarkdownEditor({
         clearTimeout(autoSaveTimeoutRef.current)
       }
     }
-  }, [title, content, excerpt, tags, category, handleAutoSave, autoSaveInterval, onAutoSave])
+  }, [title, content, excerpt, tags, category, featured, published, handleAutoSave, autoSaveInterval, onAutoSave])
 
   // 初始化时设置基准数据
   useEffect(() => {
-    lastAutoSaveDataRef.current = JSON.stringify({ title: initialTitle, content: initialContent, excerpt: initialExcerpt, tags: initialTags, category: initialCategory })
-  }, [initialTitle, initialContent, initialExcerpt, initialTags, initialCategory])
+    lastAutoSaveDataRef.current = JSON.stringify({ title: initialTitle, content: initialContent, excerpt: initialExcerpt, tags: initialTags, category: initialCategory, featured: initialFeatured, published: initialPublished })
+  }, [initialTitle, initialContent, initialExcerpt, initialTags, initialCategory, initialFeatured, initialPublished])
 
   const addTag = useCallback(() => {
     if (newTag.trim() && !tags.includes(newTag.trim())) {
@@ -345,6 +359,8 @@ export function MarkdownEditor({
                   type="checkbox"
                   id="featured"
                   className="rounded"
+                  checked={featured}
+                  onChange={(e) => setFeatured(e.target.checked)}
                 />
               </div>
               <div className="flex items-center justify-between">
@@ -353,7 +369,8 @@ export function MarkdownEditor({
                   type="checkbox"
                   id="published"
                   className="rounded"
-                  defaultChecked
+                  checked={published}
+                  onChange={(e) => setPublished(e.target.checked)}
                 />
               </div>
             </CardContent>

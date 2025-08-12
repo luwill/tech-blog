@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { generateSlug, calculateReadingTime, extractExcerpt } from "@/lib/markdown"
+import { requireAdminAccess } from "@/lib/auth-utils"
 
 // GET /api/posts/[id] - 获取单个文章
 export async function GET(
@@ -67,6 +68,9 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // 验证管理员权限
+    await requireAdminAccess()
+
     const { id } = await params
     const body = await request.json()
     const {
@@ -219,6 +223,9 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // 验证管理员权限
+    await requireAdminAccess()
+
     const { id } = await params
 
     // 验证文章是否存在

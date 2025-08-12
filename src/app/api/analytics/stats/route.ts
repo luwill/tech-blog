@@ -1,18 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { handleApiError } from '@/lib/error-handler'
+import { db } from '@/lib/db'
+import { Role } from '@prisma/client'
 
 // Get comprehensive site statistics (Admin only)
 export async function GET(request: NextRequest) {
   try {
+    // Check admin access via session
     const session = await getServerSession(authOptions)
     
-    // Check if user is admin
-    if (!session?.user?.email || session.user.email !== 'admin@louwill.com') {
+    if (!session?.user || session.user.role !== Role.ADMIN) {
       return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
+        { success: false, error: 'Admin access required' },
+        { status: 403 }
       )
     }
     
@@ -49,12 +51,12 @@ export async function GET(request: NextRequest) {
       postStats,
     ] = await Promise.all([
       // Basic site statistics
-      prisma.siteStats.findFirst({
+      db.siteStats.findFirst({
         where: { id: 1 },
       }),
       
       // Total page views in period
-      prisma.pageView.count({
+      db.pageView.count({
         where: {
           visitedAt: {
             gte: startDate,
@@ -63,7 +65,7 @@ export async function GET(request: NextRequest) {
       }),
       
       // Unique visitors in period
-      prisma.pageView.groupBy({
+      db.pageView.groupBy({
         by: ['ipAddress'],
         where: {
           visitedAt: {
@@ -76,7 +78,7 @@ export async function GET(request: NextRequest) {
       }),
       
       // Current online users
-      prisma.onlineUser.count({
+      db.onlineUser.count({
         where: {
           lastActiveAt: {
             gte: new Date(Date.now() - 5 * 60 * 1000), // Last 5 minutes
@@ -85,7 +87,7 @@ export async function GET(request: NextRequest) {
       }),
       
       // Top pages by views
-      prisma.pageView.groupBy({
+      db.pageView.groupBy({
         by: ['path', 'title'],
         where: {
           visitedAt: {
@@ -104,7 +106,7 @@ export async function GET(request: NextRequest) {
       }),
       
       // Recent page views
-      prisma.pageView.findMany({
+      db.pageView.findMany({
         select: {
           id: true,
           path: true,
@@ -120,19 +122,19 @@ export async function GET(request: NextRequest) {
       }),
       
       // View trends by day
-      prisma.$queryRaw`
+      db.$queryRaw`
         SELECT 
-          DATE(visitedAt) as date,
+          DATE("visitedAt") as date,
           COUNT(*) as views,
-          COUNT(DISTINCT ipAddress) as unique_views
-        FROM PageView 
-        WHERE visitedAt >= ${startDate}
-        GROUP BY DATE(visitedAt)
+          COUNT(DISTINCT "ipAddress") as unique_views
+        FROM page_views 
+        WHERE "visitedAt" >= ${startDate}
+        GROUP BY DATE("visitedAt")
         ORDER BY date ASC
       `,
       
       // Post statistics
-      prisma.post.count(),
+      db.post.count(),
     ])
     
     return NextResponse.json({
@@ -140,13 +142,13 @@ export async function GET(request: NextRequest) {
       data: {
         overview: {
           totalViews: siteStats?.totalViews || 0,
-          totalPosts: postStats,
+          totalPosts: Number(postStats),
           totalCategories: siteStats?.totalCategories || 0,
           totalTags: siteStats?.totalTags || 0,
-          onlineUsers,
+          onlineUsers: Number(onlineUsers),
         },
         period: {
-          views: totalViews,
+          views: Number(totalViews),
           uniqueVisitors: uniqueVisitors.length,
           startDate: startDate.toISOString(),
           endDate: new Date().toISOString(),
@@ -154,7 +156,7 @@ export async function GET(request: NextRequest) {
         topPages: topPages.map((page) => ({
           path: page.path,
           title: page.title,
-          views: page._count.path,
+          views: Number(page._count.path),
         })),
         recentViews: recentViews.map((view) => ({
           id: view.id,
@@ -166,14 +168,14 @@ export async function GET(request: NextRequest) {
             userAgent: view.userAgent,
           },
         })),
-        trends: viewTrends,
+        trends: Array.isArray(viewTrends) ? viewTrends.map((trend: { date: Date; views: bigint; unique_views: bigint }) => ({
+          date: trend.date,
+          views: Number(trend.views),
+          unique_views: Number(trend.unique_views),
+        })) : [],
       },
     })
   } catch (error) {
-    console.error('Error fetching site statistics:', error)
-    return NextResponse.json(
-      { success: false, error: 'Failed to fetch statistics' },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }

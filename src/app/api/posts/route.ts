@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { generateSlug, calculateReadingTime, extractExcerpt } from "@/lib/markdown"
-import { getCurrentUserId } from "@/lib/auth-utils"
+import { getCurrentUserId, requireAdminAccess } from "@/lib/auth-utils"
+import { handleApiError, ApiError } from "@/lib/error-handler"
 
 // GET /api/posts - 获取文章列表
 export async function GET(request: NextRequest) {
@@ -75,17 +76,16 @@ export async function GET(request: NextRequest) {
       }
     })
   } catch (error) {
-    console.error("Error fetching posts:", error)
-    return NextResponse.json(
-      { error: "Failed to fetch posts" },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }
 
 // POST /api/posts - 创建新文章
 export async function POST(request: NextRequest) {
   try {
+    // 验证管理员权限
+    await requireAdminAccess()
+
     const body = await request.json()
     const {
       title,
@@ -99,10 +99,7 @@ export async function POST(request: NextRequest) {
 
     // 验证必填字段
     if (!title || !content) {
-      return NextResponse.json(
-        { error: "Title and content are required" },
-        { status: 400 }
-      )
+      throw new ApiError("Title and content are required", 400, "MISSING_REQUIRED_FIELDS")
     }
 
     // 生成slug
@@ -114,10 +111,7 @@ export async function POST(request: NextRequest) {
     })
 
     if (existingPost) {
-      return NextResponse.json(
-        { error: "A post with this title already exists" },
-        { status: 400 }
-      )
+      throw new ApiError("A post with this title already exists", 409, "DUPLICATE_TITLE")
     }
 
     // 计算阅读时间
@@ -197,10 +191,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(post, { status: 201 })
   } catch (error) {
-    console.error("Error creating post:", error)
-    return NextResponse.json(
-      { error: "Failed to create post" },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }

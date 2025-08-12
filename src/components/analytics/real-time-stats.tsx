@@ -17,9 +17,11 @@ export function RealTimeStats() {
   const [stats, setStats] = useState<{ overview: { totalViews: number; totalPosts: number; onlineUsers: number }; period: { views: number; uniqueVisitors: number } } | null>(null)
   const [onlineUsers, setOnlineUsers] = useState<{ onlineCount: number } | null>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   const loadStats = async () => {
     try {
+      setError(null)
       const [analyticsData, onlineData] = await Promise.all([
         getAnalytics('30d'),
         getOnlineUsers()
@@ -29,6 +31,7 @@ export function RealTimeStats() {
       setOnlineUsers(onlineData)
     } catch (error) {
       console.error('Error loading real-time stats:', error)
+      setError(error instanceof Error ? error.message : 'Failed to load analytics data')
     } finally {
       setLoading(false)
     }
@@ -58,6 +61,27 @@ export function RealTimeStats() {
             </CardContent>
           </Card>
         ))}
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card className="md:col-span-2 lg:col-span-4">
+          <CardContent className="py-8">
+            <div className="text-center">
+              <p className="text-destructive mb-2">Failed to load analytics</p>
+              <p className="text-sm text-muted-foreground mb-4">{error}</p>
+              <button 
+                onClick={loadStats}
+                className="text-sm underline hover:no-underline"
+              >
+                Try again
+              </button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     )
   }

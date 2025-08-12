@@ -85,34 +85,51 @@ export function useAnalytics(path: string, title?: string) {
 // Get analytics data for admin dashboard
 export async function getAnalytics(period = '30d') {
   try {
-    const response = await fetch(`/api/analytics/stats?period=${period}`)
+    const response = await fetch(`/api/analytics/stats?period=${period}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include', // Include cookies for session
+    })
     
     if (!response.ok) {
-      throw new Error('Failed to fetch analytics')
+      if (response.status === 403) {
+        throw new Error('Access denied - Admin privileges required')
+      }
+      const errorData = await response.json().catch(() => ({}))
+      throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`)
     }
     
     const data = await response.json()
     return data.success ? data.data : null
   } catch (error) {
     console.error('Error fetching analytics:', error)
-    return null
+    throw error // Re-throw to let the component handle it
   }
 }
 
 // Get current online users count
 export async function getOnlineUsers() {
   try {
-    const response = await fetch('/api/analytics/online-users')
+    const response = await fetch('/api/analytics/online-users', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include', // Include cookies for session
+    })
     
     if (!response.ok) {
-      throw new Error('Failed to fetch online users')
+      const errorData = await response.json().catch(() => ({}))
+      throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`)
     }
     
     const data = await response.json()
     return data.success ? data.data : null
   } catch (error) {
     console.error('Error fetching online users:', error)
-    return null
+    throw error // Re-throw to let the component handle it
   }
 }
 

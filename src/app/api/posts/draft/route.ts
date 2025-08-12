@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
       content,
       excerpt,
       categoryId,
-      tags: tagNames,
+      // tags: tagNames, // TODO: 实现草稿标签保存
     } = body
 
     // 验证用户身份

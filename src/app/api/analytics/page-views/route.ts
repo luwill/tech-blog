@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import { db } from '@/lib/db'
+import { handleApiError } from '@/lib/error-handler'
 
 // Track page view
 export async function POST(request: NextRequest) {
@@ -18,7 +19,7 @@ export async function POST(request: NextRequest) {
     }
     
     // Create page view record
-    const pageView = await prisma.pageView.create({
+    const pageView = await db.pageView.create({
       data: {
         path,
         title,
@@ -29,7 +30,7 @@ export async function POST(request: NextRequest) {
     })
     
     // Update site stats
-    await prisma.siteStats.upsert({
+    await db.siteStats.upsert({
       where: { id: 1 },
       update: {
         totalViews: {
@@ -48,11 +49,7 @@ export async function POST(request: NextRequest) {
     
     return NextResponse.json({ success: true, id: pageView.id })
   } catch (error) {
-    console.error('Error tracking page view:', error)
-    return NextResponse.json(
-      { success: false, error: 'Failed to track page view' },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }
 
@@ -91,12 +88,12 @@ export async function GET(request: NextRequest) {
     
     const [totalViews, uniqueViews, viewsByDay] = await Promise.all([
       // Total views
-      prisma.pageView.count({
+      db.pageView.count({
         where: whereClause,
       }),
       
       // Unique views (by IP)
-      prisma.pageView.groupBy({
+      db.pageView.groupBy({
         by: ['ipAddress'],
         where: whereClause,
         _count: {
@@ -105,15 +102,15 @@ export async function GET(request: NextRequest) {
       }),
       
       // Views grouped by day
-      prisma.$queryRaw`
+      db.$queryRaw`
         SELECT 
-          DATE(visitedAt) as date,
+          DATE("visitedAt") as date,
           COUNT(*) as views,
-          COUNT(DISTINCT ipAddress) as unique_views
-        FROM PageView 
-        WHERE visitedAt >= ${startDate}
-        ${path ? prisma.$queryRawUnsafe('AND path = ?', path) : prisma.$queryRawUnsafe('')}
-        GROUP BY DATE(visitedAt)
+          COUNT(DISTINCT "ipAddress") as unique_views
+        FROM page_views 
+        WHERE "visitedAt" >= ${startDate}
+        ${path ? db.$queryRawUnsafe('AND path = ?', path) : db.$queryRawUnsafe('')}
+        GROUP BY DATE("visitedAt")
         ORDER BY date DESC
         LIMIT 30
       `,
@@ -122,18 +119,18 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       success: true,
       data: {
-        totalViews,
+        totalViews: Number(totalViews),
         uniqueViews: uniqueViews.length,
-        viewsByDay,
+        viewsByDay: Array.isArray(viewsByDay) ? viewsByDay.map((day: { date: Date; views: bigint; unique_views: bigint }) => ({
+          date: day.date,
+          views: Number(day.views),
+          unique_views: Number(day.unique_views),
+        })) : [],
         period,
         path,
       },
     })
   } catch (error) {
-    console.error('Error fetching page view stats:', error)
-    return NextResponse.json(
-      { success: false, error: 'Failed to fetch statistics' },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }

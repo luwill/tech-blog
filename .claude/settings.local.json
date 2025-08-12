@@ -30,7 +30,11 @@
       "Bash(dotenv -f .env.local -- npx prisma db push:*)",
       "Bash(copy .env.local .env)",
       "Bash(cp:*)",
-      "Bash(telnet:*)"
+      "Bash(telnet:*)",
+      "Bash(set DATABASE_URL=postgresql://postgres.fdttyuczrxgsygfppwcz:xiR7nJtwoLWP4yxy@aws-0-us-east-1.pooler.supabase.com:5432/postgres)",
+      "Bash(npx dotenv -e .env.local -- npx prisma generate:*)",
+      "Bash(npx dotenv -e .env.local -- npx tsx scripts/create-user.ts:*)",
+      "Bash(npx dotenv:*)"
     ],
     "deny": []
   }

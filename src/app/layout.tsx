@@ -21,10 +21,49 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "LouWill's Tech Blog",
-  description: "AI Algorithm Engineer sharing insights on technology and product reviews",
-  authors: [{ name: "LouWill" }],
-  keywords: ["AI", "Algorithm", "Technology", "Blog", "Machine Learning"],
+  title: {
+    default: "LouWill's Tech Blog",
+    template: "%s | LouWill's Tech Blog"
+  },
+  description: "AI Algorithm Engineer sharing insights on technology, AI algorithms, and product reviews. Deep dives into machine learning, web development, and industry insights.",
+  authors: [{ name: "LouWill", url: "https://www.louwill.com" }],
+  keywords: ["AI", "Algorithm", "Technology", "Blog", "Machine Learning", "Deep Learning", "Web Development", "Full Stack", "React", "Next.js"],
+  creator: "LouWill",
+  publisher: "LouWill",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  metadataBase: new URL('https://www.louwill.com'),
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://www.louwill.com',
+    title: "LouWill's Tech Blog",
+    description: "AI Algorithm Engineer sharing insights on technology, AI algorithms, and product reviews.",
+    siteName: "LouWill's Tech Blog",
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "LouWill's Tech Blog",
+    description: "AI Algorithm Engineer sharing insights on technology, AI algorithms, and product reviews.",
+    creator: '@louwill',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 };
 
 export default async function RootLayout({

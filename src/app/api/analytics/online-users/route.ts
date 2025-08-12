@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import { db } from '@/lib/db'
+import { handleApiError } from '@/lib/error-handler'
 
 // Update online user status
 export async function POST(request: NextRequest) {
@@ -25,7 +26,7 @@ export async function POST(request: NextRequest) {
     }
     
     // Update or create online user record
-    const onlineUser = await prisma.onlineUser.upsert({
+    const onlineUser = await db.onlineUser.upsert({
       where: { sessionId },
       update: {
         lastActiveAt: new Date(),
@@ -43,11 +44,7 @@ export async function POST(request: NextRequest) {
     
     return NextResponse.json({ success: true, id: onlineUser.id })
   } catch (error) {
-    console.error('Error updating online user:', error)
-    return NextResponse.json(
-      { success: false, error: 'Failed to update online status' },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }
 
@@ -59,7 +56,7 @@ export async function GET() {
     
     const [onlineCount, recentVisitors] = await Promise.all([
       // Count of online users
-      prisma.onlineUser.count({
+      db.onlineUser.count({
         where: {
           lastActiveAt: {
             gte: fiveMinutesAgo,
@@ -68,7 +65,7 @@ export async function GET() {
       }),
       
       // Recent visitors details (for admin)
-      prisma.onlineUser.findMany({
+      db.onlineUser.findMany({
         where: {
           lastActiveAt: {
             gte: fiveMinutesAgo,
@@ -91,7 +88,7 @@ export async function GET() {
     
     // Clean up old records (older than 1 hour)
     const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000)
-    await prisma.onlineUser.deleteMany({
+    await db.onlineUser.deleteMany({
       where: {
         lastActiveAt: {
           lt: oneHourAgo,
@@ -102,15 +99,11 @@ export async function GET() {
     return NextResponse.json({
       success: true,
       data: {
-        onlineCount,
+        onlineCount: Number(onlineCount),
         recentVisitors,
       },
     })
   } catch (error) {
-    console.error('Error fetching online users:', error)
-    return NextResponse.json(
-      { success: false, error: 'Failed to fetch online users' },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }
