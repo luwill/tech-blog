@@ -123,3 +123,57 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Custom Markdown Styles for better light mode readability */
+@layer components {
+  .prose {
+    @apply text-foreground;
+  }
+  
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4,
+  .prose h5,
+  .prose h6 {
+    @apply text-foreground;
+  }
+  
+  .prose p {
+    @apply text-foreground;
+  }
+  
+  .prose strong {
+    @apply text-foreground font-semibold;
+  }
+  
+  .prose code {
+    @apply text-foreground bg-muted px-2 py-1 rounded-md;
+  }
+  
+  .prose pre {
+    @apply bg-muted text-foreground;
+  }
+  
+  .prose blockquote {
+    @apply text-foreground border-l-4 border-primary/30 bg-muted/30;
+  }
+  
+  .prose a {
+    @apply text-primary hover:text-primary/80;
+  }
+  
+  .prose ul li,
+  .prose ol li {
+    @apply text-foreground;
+  }
+  
+  .prose table {
+    @apply text-foreground;
+  }
+  
+  .prose th,
+  .prose td {
+    @apply text-foreground border-border;
+  }
+}

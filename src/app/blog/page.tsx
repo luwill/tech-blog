@@ -6,19 +6,17 @@ import { HeaderSimple } from '@/components/layout/header-simple'
 import { Footer } from '@/components/layout/footer'
 import { useLocale } from '@/components/providers/locale-provider'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { 
   Calendar, 
   Clock, 
   Eye, 
-  Search, 
-  Filter,
-  ArrowRight,
-  BookOpen
+  BookOpen,
+  FileText
 } from 'lucide-react'
+import { countWords, getContentPreview } from '@/lib/utils'
 
 interface Post {
   id: string
@@ -57,7 +55,6 @@ export default function BlogPage() {
   const [posts, setPosts] = useState<Post[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
-  const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [sortBy, setSortBy] = useState('newest')
 
@@ -93,15 +90,10 @@ export default function BlogPage() {
     .filter(post => {
       if (!post.published) return false
       
-      const matchesSearch = searchQuery === '' || 
-        post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        post.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        post.tags.some(tag => tag.name.toLowerCase().includes(searchQuery.toLowerCase()))
-      
       const matchesCategory = selectedCategory === 'all' || 
         post.category?.slug === selectedCategory
       
-      return matchesSearch && matchesCategory
+      return matchesCategory
     })
     .sort((a, b) => {
       switch (sortBy) {
@@ -133,46 +125,10 @@ export default function BlogPage() {
       <HeaderSimple />
       
       <main className="flex-1">
-        {/* Hero Section */}
-        <section className="bg-gradient-to-r from-primary/10 via-primary/5 to-background py-20">
-          <div className="container mx-auto px-4">
-            <div className="max-w-3xl mx-auto text-center space-y-6">
-              <h1 className="text-4xl md:text-5xl font-bold">
-                {t.myTechBlog}
-              </h1>
-              <p className="text-xl text-muted-foreground">
-                {t.blogDescription}
-              </p>
-              <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <BookOpen className="h-4 w-4" />
-                  <span>{posts.filter(p => p.published).length} {t.articles}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Filter className="h-4 w-4" />
-                  <span>{categories.length} {t.categories}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         <div className="container mx-auto px-4 py-12">
-          {/* Search and Filter Section */}
+          {/* Filter Section */}
           <div className="mb-12">
-            <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-              <div className="flex-1 max-w-md">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                  <Input
-                    placeholder={t.searchArticles}
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-              </div>
-              
+            <div className="flex flex-col md:flex-row gap-4 items-center justify-center">
               <div className="flex gap-3">
                 <Select value={selectedCategory} onValueChange={setSelectedCategory}>
                   <SelectTrigger className="w-[180px]">
@@ -204,20 +160,22 @@ export default function BlogPage() {
           </div>
 
           {loading ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="max-w-4xl mx-auto space-y-8">
               {[...Array(6)].map((_, i) => (
-                <Card key={i} className="animate-pulse">
-                  <div className="aspect-video bg-gray-200 rounded-t-lg"></div>
-                  <CardHeader>
-                    <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                    <div className="h-3 bg-gray-200 rounded w-full"></div>
-                    <div className="h-3 bg-gray-200 rounded w-2/3"></div>
-                  </CardHeader>
-                </Card>
+                <div key={i} className="animate-pulse">
+                  <div className="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded w-2/3 mb-4"></div>
+                  <div className="flex gap-4 text-sm">
+                    <div className="h-3 bg-gray-200 rounded w-20"></div>
+                    <div className="h-3 bg-gray-200 rounded w-16"></div>
+                    <div className="h-3 bg-gray-200 rounded w-12"></div>
+                  </div>
+                </div>
               ))}
             </div>
           ) : (
-            <>
+            <div className="max-w-4xl mx-auto">
               {/* Featured Posts */}
               {featuredPosts.length > 0 && (
                 <section className="mb-16">
@@ -225,111 +183,104 @@ export default function BlogPage() {
                     <h2 className="text-2xl font-bold">{t.featuredArticles}</h2>
                     <Badge variant="secondary">{t.featured}</Badge>
                   </div>
-                  <div className="grid md:grid-cols-2 gap-8">
+                  <div className="space-y-8">
                     {featuredPosts.map((post) => (
-                      <Card key={post.id} className="group hover:shadow-lg transition-all duration-300 overflow-hidden">
-                        <div className="aspect-video bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-                          <BookOpen className="h-12 w-12 text-primary/40" />
-                        </div>
-                        <CardHeader>
-                          <div className="flex items-center gap-2 mb-2">
+                      <article key={post.id} className="group border-b border-border pb-8 last:border-b-0">
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-2">
                             {post.category && (
                               <Badge variant="outline">{post.category.name}</Badge>
                             )}
-                            <Badge>{t.featured}</Badge>
+                            <Badge className="bg-primary/10 text-primary hover:bg-primary/20">{t.featured}</Badge>
                           </div>
-                          <CardTitle className="group-hover:text-primary transition-colors">
-                            <Link href={`/blog/${post.slug}`}>
+                          
+                          <h3 className="text-2xl font-bold leading-tight">
+                            <Link 
+                              href={`/blog/${post.slug}`}
+                              className="hover:text-primary transition-colors"
+                            >
                               {post.title}
                             </Link>
-                          </CardTitle>
-                          <CardDescription className="line-clamp-3">
-                            {post.excerpt}
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="flex items-center justify-between text-sm text-muted-foreground">
-                            <div className="flex items-center gap-4">
-                              <div className="flex items-center gap-1">
-                                <Calendar className="h-4 w-4" />
-                                <span>{formatDate(post.createdAt)}</span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <Clock className="h-4 w-4" />
-                                <span>{post.readTime || 5} {t.minRead}</span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <Eye className="h-4 w-4" />
-                                <span>{post.views}</span>
-                              </div>
+                          </h3>
+                          
+                          <p className="text-muted-foreground leading-relaxed">
+                            {getContentPreview(post.content || post.excerpt, 120)}
+                          </p>
+                          
+                          <div className="flex items-center gap-6 text-sm text-muted-foreground">
+                            <div className="flex items-center gap-1">
+                              <Calendar className="h-4 w-4" />
+                              <span>{formatDate(post.createdAt)}</span>
                             </div>
-                            <Button variant="ghost" size="sm" asChild>
-                              <Link href={`/blog/${post.slug}`}>
-                                {t.readMore}
-                                <ArrowRight className="h-4 w-4 ml-1" />
-                              </Link>
-                            </Button>
+                            <div className="flex items-center gap-1">
+                              <Clock className="h-4 w-4" />
+                              <span>{post.readTime || 5} min read</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Eye className="h-4 w-4" />
+                              <span>{post.views.toLocaleString()}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <FileText className="h-4 w-4" />
+                              <span>{countWords(post.content)} words</span>
+                            </div>
                           </div>
-                        </CardContent>
-                      </Card>
+                        </div>
+                      </article>
                     ))}
                   </div>
                 </section>
               )}
 
-              {/* Regular Posts */}
-              {regularPosts.length > 0 ? (
-                <section>
+              {/* All Articles */}
+              {(regularPosts.length > 0 || featuredPosts.length > 0) ? (
+                <section className={featuredPosts.length > 0 ? "border-t border-border pt-16" : ""}>
                   <h2 className="text-2xl font-bold mb-8">
-                    {featuredPosts.length > 0 ? t.allArticles : t.latestArticles}
+                    {featuredPosts.length > 0 ? 'All Articles' : 'Latest Articles'}
                   </h2>
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {regularPosts.map((post) => (
-                      <Card key={post.id} className="group hover:shadow-lg transition-all duration-300 overflow-hidden">
-                        <div className="aspect-video bg-gradient-to-br from-muted to-muted/50 flex items-center justify-center">
-                          <BookOpen className="h-8 w-8 text-muted-foreground/40" />
-                        </div>
-                        <CardHeader>
-                          <div className="flex items-center gap-2 mb-2">
+                  <div className="space-y-8">
+                    {(featuredPosts.length > 0 ? regularPosts : filteredPosts).map((post) => (
+                      <article key={post.id} className="group border-b border-border pb-8 last:border-b-0">
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-2">
                             {post.category && (
                               <Badge variant="outline">{post.category.name}</Badge>
                             )}
                           </div>
-                          <CardTitle className="group-hover:text-primary transition-colors line-clamp-2">
-                            <Link href={`/blog/${post.slug}`}>
+                          
+                          <h3 className="text-xl font-bold leading-tight">
+                            <Link 
+                              href={`/blog/${post.slug}`}
+                              className="hover:text-primary transition-colors"
+                            >
                               {post.title}
                             </Link>
-                          </CardTitle>
-                          <CardDescription className="line-clamp-2">
-                            {post.excerpt}
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="flex flex-wrap gap-1 mb-4">
-                            {post.tags.slice(0, 3).map((tag) => (
-                              <Badge key={tag.slug} variant="secondary" className="text-xs">
-                                {tag.name}
-                              </Badge>
-                            ))}
-                          </div>
-                          <div className="flex items-center justify-between text-sm text-muted-foreground">
-                            <div className="flex items-center gap-3">
-                              <div className="flex items-center gap-1">
-                                <Calendar className="h-3 w-3" />
-                                <span>{formatDate(post.createdAt)}</span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <Clock className="h-3 w-3" />
-                                <span>{post.readTime || 5}{t.minRead}</span>
-                              </div>
+                          </h3>
+                          
+                          <p className="text-muted-foreground leading-relaxed">
+                            {getContentPreview(post.content || post.excerpt, 120)}
+                          </p>
+                          
+                          <div className="flex items-center gap-6 text-sm text-muted-foreground">
+                            <div className="flex items-center gap-1">
+                              <Calendar className="h-4 w-4" />
+                              <span>{formatDate(post.createdAt)}</span>
                             </div>
                             <div className="flex items-center gap-1">
-                              <Eye className="h-3 w-3" />
-                              <span>{post.views}</span>
+                              <Clock className="h-4 w-4" />
+                              <span>{post.readTime || 5} min read</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Eye className="h-4 w-4" />
+                              <span>{post.views.toLocaleString()}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <FileText className="h-4 w-4" />
+                              <span>{countWords(post.content)} words</span>
                             </div>
                           </div>
-                        </CardContent>
-                      </Card>
+                        </div>
+                      </article>
                     ))}
                   </div>
                 </section>
@@ -338,16 +289,15 @@ export default function BlogPage() {
                   <BookOpen className="h-16 w-16 mx-auto text-muted-foreground/40 mb-4" />
                   <h3 className="text-xl font-semibold mb-2">{t.noArticlesFound}</h3>
                   <p className="text-muted-foreground mb-6">
-                    {searchQuery || selectedCategory !== 'all' 
+                    {selectedCategory !== 'all' 
                       ? t.tryAdjusting
                       : t.noPublished
                     }
                   </p>
-                  {(searchQuery || selectedCategory !== 'all') && (
+                  {selectedCategory !== 'all' && (
                     <Button
                       variant="outline"
                       onClick={() => {
-                        setSearchQuery('')
                         setSelectedCategory('all')
                       }}
                     >
@@ -375,7 +325,7 @@ export default function BlogPage() {
                   </div>
                 </section>
               )}
-            </>
+            </div>
           )}
         </div>
       </main>

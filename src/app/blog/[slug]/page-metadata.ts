@@ -5,7 +5,20 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params
   
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/posts/slug/${slug}`)
+    // Use localhost for development, production URL for production
+    const isDev = process.env.NODE_ENV === 'development'
+    const baseUrl = isDev 
+      ? 'http://localhost:3000'  // Default Next.js port
+      : (process.env.NEXT_PUBLIC_BASE_URL || `https://${process.env.VERCEL_URL}` || 'https://www.louwill.com')
+    
+    const response = await fetch(`${baseUrl}/api/posts/slug/${slug}`, {
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // Add timeout for better error handling
+      signal: AbortSignal.timeout(10000)
+    })
     
     if (!response.ok) {
       return generateSEO({
