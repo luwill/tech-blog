@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useLocale } from "@/components/providers/locale-provider"
 import Link from "next/link"
+import Image from "next/image"
 import { Github, Mail, MapPin, Briefcase } from "lucide-react"
 
 export default function AboutPage() {
@@ -18,8 +19,14 @@ export default function AboutPage() {
         {/* Hero Section */}
         <section className="container mx-auto px-4 py-16">
           <div className="max-w-3xl mx-auto text-center space-y-6">
-            <div className="h-32 w-32 mx-auto rounded-full bg-gradient-to-r from-primary to-primary/60 flex items-center justify-center">
-              <span className="text-4xl font-bold text-primary-foreground">L</span>
+            <div className="h-32 w-32 mx-auto relative rounded-full overflow-hidden border-4 border-primary/20">
+              <Image
+                src="/louwill-avatar.png"
+                alt="louwill"
+                fill
+                className="object-cover"
+                priority
+              />
             </div>
             <h1 className="text-4xl md:text-5xl font-bold">{t.aboutMe}</h1>
             <p className="text-xl text-muted-foreground">
