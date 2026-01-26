@@ -4,6 +4,22 @@
 /* KaTeX CSS for math rendering */
 @import "katex/dist/katex.css";
 
+/* LXGW WenKai Lite - Chinese optimized font for better reading */
+@import url('https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.7.0/style.css');
+
+/* Terminal/IDE Theme Styles */
+@import "../styles/globals/_variables.css";
+@import "../styles/globals/_typography.css";
+@import "../styles/globals/_animations.css";
+@import "../styles/globals/_base.css";
+
+/* Shadcn/UI Component Overrides */
+@import "../styles/overrides/button.css";
+@import "../styles/overrides/card.css";
+@import "../styles/overrides/input.css";
+@import "../styles/overrides/badge.css";
+@import "../styles/overrides/dialog.css";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -47,22 +63,24 @@
 }
 
 :root {
+  color-scheme: light;
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
+  --background: oklch(0.99 0 0);
   --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
+  --card: oklch(0.99 0 0);
   --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
+  --popover: oklch(0.99 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
+  /* Terminal theme blue #2E54A1 */
+  --primary: #2E54A1;
+  --primary-foreground: #ffffff;
+  --secondary: oklch(0.95 0 0);
+  --secondary-foreground: oklch(0.20 0 0);
+  --muted: oklch(0.95 0 0);
+  --muted-foreground: oklch(0.45 0 0);
+  --accent: oklch(0.95 0 0);
+  --accent-foreground: oklch(0.20 0 0);
+  --destructive: oklch(0.55 0.22 25);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
@@ -82,21 +100,23 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
+  color-scheme: dark;
+  --background: oklch(0.12 0 0);
+  --foreground: oklch(0.93 0.01 250);
+  --card: oklch(0.15 0 0);
+  --card-foreground: oklch(0.93 0.01 250);
+  --popover: oklch(0.15 0 0);
+  --popover-foreground: oklch(0.93 0.01 250);
+  /* Terminal theme blue #2E54A1 - lighter for dark mode */
+  --primary: #4A7DD4;
+  --primary-foreground: #ffffff;
+  --secondary: oklch(0.22 0 0);
+  --secondary-foreground: oklch(0.93 0 0);
+  --muted: oklch(0.22 0 0);
+  --muted-foreground: oklch(0.70 0 0);
+  --accent: oklch(0.22 0 0);
+  --accent-foreground: oklch(0.93 0 0);
+  --destructive: oklch(0.65 0.22 25);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
@@ -119,8 +139,17 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
   body {
     @apply bg-background text-foreground;
+    font-family: "LXGW WenKai Lite", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
 }
 
@@ -128,52 +157,141 @@
 @layer components {
   .prose {
     @apply text-foreground;
+    line-height: 1.8;
   }
-  
+
   .prose h1,
   .prose h2,
   .prose h3,
   .prose h4,
   .prose h5,
   .prose h6 {
-    @apply text-foreground;
+    @apply text-foreground font-semibold;
+    scroll-margin-top: 5rem;
   }
-  
+
+  .prose h2 {
+    @apply text-2xl mt-10 mb-4 pb-2;
+    border-bottom: 1px solid var(--terminal-border-subtle, oklch(0.25 0 0));
+  }
+
+  .prose h3 {
+    @apply text-xl mt-8 mb-3;
+  }
+
+  .prose h4 {
+    @apply text-lg mt-6 mb-2;
+  }
+
   .prose p {
-    @apply text-foreground;
+    @apply text-foreground my-5;
+    line-height: 1.8;
   }
-  
+
   .prose strong {
     @apply text-foreground font-semibold;
   }
-  
+
   .prose code {
-    @apply text-foreground bg-muted px-2 py-1 rounded-md;
+    @apply text-foreground bg-muted px-2 py-1 rounded-md text-sm;
+    font-family: var(--font-mono);
   }
-  
+
   .prose pre {
-    @apply bg-muted text-foreground;
+    @apply bg-muted text-foreground my-6 p-5 rounded-lg overflow-x-auto;
+    border: 1px solid var(--terminal-border-subtle, oklch(0.25 0 0));
   }
-  
+
+  .prose pre code {
+    @apply bg-transparent p-0;
+  }
+
   .prose blockquote {
-    @apply text-foreground border-l-4 border-primary/30 bg-muted/30;
+    @apply text-foreground border-l-4 border-primary bg-muted/50 my-6 py-4 px-6 rounded-r-lg italic;
   }
-  
+
+  .prose blockquote p {
+    @apply my-0;
+  }
+
   .prose a {
-    @apply text-primary hover:text-primary/80;
+    @apply text-primary hover:text-primary/80 transition-colors;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-style: dashed;
   }
-  
+
+  .prose a:hover {
+    text-decoration-style: solid;
+  }
+
+  .prose ul,
+  .prose ol {
+    @apply my-5 pl-6;
+  }
+
   .prose ul li,
   .prose ol li {
-    @apply text-foreground;
+    @apply text-foreground my-2;
+    line-height: 1.7;
   }
-  
+
+  .prose ul li::marker {
+    color: var(--syntax-string, oklch(0.72 0.15 145));
+  }
+
+  .prose ol li::marker {
+    color: var(--syntax-number, oklch(0.78 0.10 160));
+    font-family: var(--font-mono);
+  }
+
   .prose table {
-    @apply text-foreground;
+    @apply text-foreground w-full my-6;
+    border-collapse: collapse;
   }
-  
+
   .prose th,
   .prose td {
-    @apply text-foreground border-border;
+    @apply text-foreground border-border p-3 text-left;
+    border: 1px solid var(--terminal-border-default, oklch(0.30 0 0));
+  }
+
+  .prose th {
+    @apply font-semibold;
+    background: var(--terminal-bg-medium, oklch(0.18 0 0));
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+  }
+
+  .prose tr:nth-child(even) {
+    background: var(--terminal-bg-elevated, oklch(0.22 0 0));
+  }
+
+  .prose hr {
+    @apply my-8 border-0;
+    border-top: 1px dashed var(--terminal-border-default, oklch(0.30 0 0));
+  }
+
+  .prose img {
+    @apply max-w-full h-auto rounded-lg my-6;
+    border: 1px solid var(--terminal-border-subtle, oklch(0.25 0 0));
+  }
+
+  /* Heading anchor links for TOC */
+  .prose h2[id],
+  .prose h3[id],
+  .prose h4[id] {
+    position: relative;
+  }
+
+  .prose h2[id]:hover::before,
+  .prose h3[id]:hover::before,
+  .prose h4[id]:hover::before {
+    content: '#';
+    position: absolute;
+    left: -1.5rem;
+    color: var(--syntax-comment, oklch(0.55 0.08 145));
+    font-weight: 400;
+    opacity: 0.7;
   }
 }

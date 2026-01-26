@@ -66,6 +66,7 @@ export async function GET(request: NextRequest) {
 
     const total = await db.post.count({ where })
 
+    // Add cache headers for better performance
     return NextResponse.json({
       posts,
       pagination: {
@@ -73,6 +74,10 @@ export async function GET(request: NextRequest) {
         limit,
         total,
         pages: Math.ceil(total / limit)
+      }
+    }, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300'
       }
     })
   } catch (error) {
@@ -123,24 +128,41 @@ export async function POST(request: NextRequest) {
     // 获取当前用户ID
     const authorId = await getCurrentUserId()
 
-    // 处理标签
-    const tagConnections = []
+    // 处理标签 - 使用批量操作避免 N+1 查询
+    const tagConnections: { id: string }[] = []
     if (tagNames && tagNames.length > 0) {
-      for (const tagName of tagNames) {
-        const tagSlug = generateSlug(tagName)
-        
-        // 查找或创建标签
-        const tag = await db.tag.upsert({
-          where: { slug: tagSlug },
-          update: {},
-          create: {
-            name: tagName,
-            slug: tagSlug
-          }
+      // 1. 生成所有标签的 slug
+      const tagData: { name: string; slug: string }[] = tagNames.map((name: string) => ({
+        name,
+        slug: generateSlug(name)
+      }))
+      const tagSlugs = tagData.map((t) => t.slug)
+
+      // 2. 单次查询已存在的标签
+      const existingTags = await db.tag.findMany({
+        where: { slug: { in: tagSlugs } },
+        select: { id: true, slug: true }
+      })
+      const existingSlugs = new Set(existingTags.map(t => t.slug))
+
+      // 3. 找出需要创建的新标签
+      const newTags = tagData.filter(t => !existingSlugs.has(t.slug))
+
+      // 4. 批量创建新标签
+      if (newTags.length > 0) {
+        await db.tag.createMany({
+          data: newTags,
+          skipDuplicates: true
         })
-        
-        tagConnections.push({ id: tag.id })
       }
+
+      // 5. 单次获取所有标签 ID
+      const allTags = await db.tag.findMany({
+        where: { slug: { in: tagSlugs } },
+        select: { id: true }
+      })
+
+      tagConnections.push(...allTags.map(t => ({ id: t.id })))
     }
 
     // 创建文章数据
@@ -153,7 +175,7 @@ export async function POST(request: NextRequest) {
       published,
       featured,
       readTime,
-      authorId, // TODO: 替换为实际用户ID
+      authorId,
       tags: {
         connect: tagConnections
       }

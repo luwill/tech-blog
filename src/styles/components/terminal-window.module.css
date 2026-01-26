@@ -1,0 +1,179 @@
+/**
+ * Terminal Window Component Styles
+ * macOS-style window chrome with content area
+ */
+
+.terminalWindow {
+  background: var(--terminal-bg-deep);
+  border: 1px solid var(--terminal-border-default);
+  border-radius: var(--terminal-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--terminal-shadow-lg);
+}
+
+.terminalWindow.elevated {
+  box-shadow:
+    var(--terminal-shadow-lg),
+    0 0 40px var(--neon-glow);
+}
+
+/* Title bar with traffic light buttons */
+.titleBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--terminal-bg-medium);
+  border-bottom: 1px solid var(--terminal-border-subtle);
+  user-select: none;
+}
+
+/* Traffic light buttons */
+.trafficLights {
+  display: flex;
+  gap: 8px;
+}
+
+.trafficLight {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  transition: filter var(--transition-fast);
+}
+
+.trafficLight.red {
+  background: var(--chrome-red);
+}
+
+.trafficLight.yellow {
+  background: var(--chrome-yellow);
+}
+
+.trafficLight.green {
+  background: var(--chrome-green);
+}
+
+.terminalWindow:hover .trafficLight {
+  filter: brightness(1.1);
+}
+
+/* Title text */
+.title {
+  flex: 1;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--terminal-text-secondary);
+  letter-spacing: 0.02em;
+}
+
+/* Optional tabs in title bar */
+.titleTabs {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.titleTab {
+  padding: 4px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--terminal-text-tertiary);
+  background: transparent;
+  border: none;
+  border-radius: var(--terminal-radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.titleTab:hover {
+  background: var(--terminal-bg-elevated);
+  color: var(--terminal-text-secondary);
+}
+
+.titleTab.active {
+  background: var(--terminal-bg-deep);
+  color: var(--terminal-text-primary);
+}
+
+/* Content area */
+.content {
+  padding: 24px;
+  min-height: 100px;
+}
+
+.content.noPadding {
+  padding: 0;
+}
+
+.content.compact {
+  padding: 16px;
+}
+
+/* Terminal prompt line inside content */
+.promptLine {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-family: var(--font-mono);
+  line-height: var(--line-height-code);
+}
+
+.prompt {
+  color: var(--syntax-string);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.command {
+  color: var(--terminal-text-primary);
+}
+
+.output {
+  color: var(--terminal-text-secondary);
+  padding-left: 16px;
+  margin-top: 4px;
+}
+
+/* Footer/status bar area */
+.footer {
+  padding: 8px 16px;
+  background: var(--terminal-bg-medium);
+  border-top: 1px solid var(--terminal-border-subtle);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--terminal-text-tertiary);
+}
+
+/* Size variants */
+.small {
+  max-width: 400px;
+}
+
+.medium {
+  max-width: 600px;
+}
+
+.large {
+  max-width: 800px;
+}
+
+.full {
+  max-width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .titleBar {
+    padding: 10px 12px;
+  }
+
+  .trafficLight {
+    width: 10px;
+    height: 10px;
+  }
+
+  .content {
+    padding: 16px;
+  }
+}

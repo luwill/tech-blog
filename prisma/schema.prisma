@@ -90,6 +90,11 @@ model Post {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 
+  // Performance indexes
+  @@index([authorId])
+  @@index([categoryId])
+  @@index([published, createdAt])
+  @@index([featured, published])
   @@map("posts")
 }
 
@@ -133,6 +138,10 @@ model PageView {
   visitedAt DateTime @default(now())
   createdAt DateTime @default(now())
 
+  // Performance indexes for analytics queries
+  @@index([visitedAt])
+  @@index([path, visitedAt])
+  @@index([postId, visitedAt])
   @@map("page_views")
 }
 
@@ -146,6 +155,8 @@ model OnlineUser {
   lastActiveAt  DateTime @default(now())
   createdAt     DateTime @default(now())
 
+  // Index for cleanup and online user queries
+  @@index([lastActiveAt])
   @@map("online_users")
 }
 

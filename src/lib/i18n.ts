@@ -23,7 +23,15 @@ export interface Translations {
   learnAboutMe: string
   whatIShare: string
   whatIShareDescription: string
-  
+
+  // Skills
+  skillAIGC: string
+  skillVibeCoding: string
+  skillVibeResearching: string
+  skillAIFullStack: string
+  skillDeepLearning: string
+  skillAIAgent: string
+
   // Features
   aiTechnology: string
   aiTechnologyDescription: string
@@ -113,12 +121,20 @@ export const translations: Record<Locale, Translations> = {
     // Homepage
     heroTitle: "Hello, I'm LouWill",
     heroSubtitle: 'AI Algorithm Engineer & Full Stack Developer',
-    heroDescription: 'Welcome to my digital space where I share insights on AI technology, algorithm optimization, and product reviews. Join me on this journey through the evolving landscape of artificial intelligence.',
+    heroDescription: "Hello, I'm LouWill, Algorithm Engineer / AI Full Stack Developer. Welcome to my personal homepage, where I focus on cutting-edge technology sharing and project practice in AI Programming & Vibe Coding.",
     exploreBlog: 'Explore My Blog',
     learnAboutMe: 'Learn About Me',
     whatIShare: 'What I Share',
     whatIShareDescription: 'Discover the latest in AI technology and algorithm engineering',
-    
+
+    // Skills
+    skillAIGC: 'AIGC',
+    skillVibeCoding: 'Vibe Coding',
+    skillVibeResearching: 'Vibe Researching',
+    skillAIFullStack: 'AI Full Stack',
+    skillDeepLearning: 'Deep Learning',
+    skillAIAgent: 'AI Agent',
+
     // Features
     aiTechnology: 'AI Technology',
     aiTechnologyDescription: 'Deep dives into machine learning algorithms, neural networks, and cutting-edge AI research',
@@ -126,7 +142,7 @@ export const translations: Record<Locale, Translations> = {
     productReviewsDescription: "Honest reviews of AI tools, frameworks, and platforms from an engineer's perspective",
     technicalInsights: 'Technical Insights',
     technicalInsightsDescription: 'Practical tips, best practices, and lessons learned from real-world AI implementations',
-    
+
     // CTA
     readyToDiveIn: 'Ready to dive in?',
     startExploring: 'Start exploring my latest articles and insights on AI technology',
@@ -203,15 +219,23 @@ export const translations: Record<Locale, Translations> = {
     signOut: '退出',
     admin: '管理',
     
-    // Homepage  
+    // Homepage
     heroTitle: '你好，我是LouWill',
     heroSubtitle: 'AI算法工程师 & 全栈开发者',
-    heroDescription: '欢迎来到我的数字空间，我在这里分享AI技术、算法优化和产品评测的见解。加入我探索人工智能不断演进的旅程。',
+    heroDescription: '你好，我是LouWill，算法工程师/AI全栈开发。欢迎来到我的个人主页，我聚焦于AI编程与Vibe Coding的前沿技术分享与项目实践。',
     exploreBlog: '探索我的博客',
     learnAboutMe: '了解我',
     whatIShare: '我分享什么',
     whatIShareDescription: '发现AI技术和算法工程的最新进展',
-    
+
+    // Skills
+    skillAIGC: 'AIGC',
+    skillVibeCoding: 'Vibe Coding',
+    skillVibeResearching: 'Vibe Researching',
+    skillAIFullStack: 'AI Full Stack',
+    skillDeepLearning: 'Deep Learning',
+    skillAIAgent: 'AI Agent',
+
     // Features
     aiTechnology: 'AI技术',
     aiTechnologyDescription: '深入探讨机器学习算法、神经网络和前沿AI研究',
@@ -219,7 +243,7 @@ export const translations: Record<Locale, Translations> = {
     productReviewsDescription: '从工程师角度对AI工具、框架和平台进行诚实评测',
     technicalInsights: '技术洞察',
     technicalInsightsDescription: '来自真实AI实现的实用技巧、最佳实践和经验分享',
-    
+
     // CTA
     readyToDiveIn: '准备好开始了吗？',
     startExploring: '开始探索我关于AI技术的最新文章和见解',

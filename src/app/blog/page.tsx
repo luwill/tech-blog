@@ -1,22 +1,22 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { HeaderSimple } from '@/components/layout/header-simple'
 import { Footer } from '@/components/layout/footer'
 import { useLocale } from '@/components/providers/locale-provider'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { 
-  Calendar, 
-  Clock, 
-  Eye, 
-  BookOpen,
-  FileText
+import {
+  Calendar,
+  Clock,
+  Eye,
+  FolderOpen,
+  Terminal
 } from 'lucide-react'
-import { countWords, getContentPreview } from '@/lib/utils'
+import { getContentPreview } from '@/lib/utils'
+import styles from '@/styles/pages/blog-list.module.css'
 
 interface Post {
   id: string
@@ -52,11 +52,32 @@ interface Category {
 
 export default function BlogPage() {
   const { t } = useLocale()
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const [posts, setPosts] = useState<Post[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
-  const [selectedCategory, setSelectedCategory] = useState('all')
-  const [sortBy, setSortBy] = useState('newest')
+
+  // Read filter state from URL
+  const selectedCategory = searchParams.get('category') || 'all'
+  const sortBy = searchParams.get('sort') || 'newest'
+
+  // Update URL when filters change
+  const updateFilters = useCallback((category: string, sort: string) => {
+    const params = new URLSearchParams()
+    if (category !== 'all') params.set('category', category)
+    if (sort !== 'newest') params.set('sort', sort)
+    const queryString = params.toString()
+    router.push(queryString ? `/blog?${queryString}` : '/blog', { scroll: false })
+  }, [router])
+
+  const setSelectedCategory = (category: string) => {
+    updateFilters(category, sortBy)
+  }
+
+  const setSortBy = (sort: string) => {
+    updateFilters(selectedCategory, sort)
+  }
 
   useEffect(() => {
     const loadData = async () => {
@@ -65,15 +86,19 @@ export default function BlogPage() {
           fetch('/api/posts'),
           fetch('/api/categories')
         ])
-        
+
         if (postsResponse.ok) {
           const postsData = await postsResponse.json()
           setPosts(postsData.posts || [])
         }
-        
+
         if (categoriesResponse.ok) {
           const categoriesData = await categoriesResponse.json()
-          setCategories(categoriesData.categories || [])
+          // Handle both array and object response formats
+          const cats = Array.isArray(categoriesData)
+            ? categoriesData
+            : categoriesData.categories || []
+          setCategories(cats)
         }
       } catch (error) {
         console.error('Error loading blog data:', error)
@@ -81,7 +106,7 @@ export default function BlogPage() {
         setLoading(false)
       }
     }
-    
+
     loadData()
   }, [])
 
@@ -89,10 +114,8 @@ export default function BlogPage() {
   const filteredPosts = posts
     .filter(post => {
       if (!post.published) return false
-      
-      const matchesCategory = selectedCategory === 'all' || 
+      const matchesCategory = selectedCategory === 'all' ||
         post.category?.slug === selectedCategory
-      
       return matchesCategory
     })
     .sort((a, b) => {
@@ -110,186 +133,146 @@ export default function BlogPage() {
     })
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })
+    return new Date(dateString).toISOString().split('T')[0]
   }
-
-  const featuredPosts = filteredPosts.filter(post => post.featured).slice(0, 2)
-  const regularPosts = filteredPosts.filter(post => !post.featured)
 
   return (
     <div className="flex flex-col min-h-screen">
       <HeaderSimple />
-      
+
       <main className="flex-1">
-        <div className="container mx-auto px-4 py-12">
-          {/* Filter Section */}
-          <div className="mb-12">
-            <div className="flex flex-col md:flex-row gap-4 items-center justify-center">
-              <div className="flex gap-3">
-                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">{t.allCategories}</SelectItem>
-                    {categories.map((category) => (
-                      <SelectItem key={category.id} value={category.slug}>
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                
-                <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className="w-[140px]">
-                    <SelectValue placeholder="Sort by" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="newest">{t.newest}</SelectItem>
-                    <SelectItem value="oldest">{t.oldest}</SelectItem>
-                    <SelectItem value="popular">{t.mostPopular}</SelectItem>
-                    <SelectItem value="reading-time">{t.readingTime}</SelectItem>
-                  </SelectContent>
-                </Select>
+        {/* Page Header */}
+        <div className={styles.pageHeader}>
+          <div className="max-w-3xl mx-auto px-4">
+            <div className={styles.headerContent}>
+              <FolderOpen className={styles.headerIcon} aria-hidden="true" />
+              <div>
+                <h1 className={styles.headerTitle}>blog/</h1>
+                <p className={styles.headerSubtitle}>
+                  $ ls -la ./articles | wc -l → {filteredPosts.length} files
+                </p>
               </div>
             </div>
           </div>
+        </div>
+
+        <div className="max-w-3xl mx-auto px-4 py-8">
+          {/* Filter Bar */}
+          <div className={styles.filterBar}>
+            <span className={styles.filterLabel}>filter:</span>
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t.allCategories}</SelectItem>
+                {categories.map((category) => (
+                  <SelectItem key={category.id} value={category.slug}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <div className={styles.filterSeparator} />
+
+            <span className={styles.filterLabel}>sort:</span>
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-[140px]">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="newest">{t.newest}</SelectItem>
+                <SelectItem value="oldest">{t.oldest}</SelectItem>
+                <SelectItem value="popular">{t.mostPopular}</SelectItem>
+                <SelectItem value="reading-time">{t.readingTime}</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <span className={styles.filterCount}>
+              showing <span>{filteredPosts.length}</span> of <span>{posts.filter(p => p.published).length}</span>
+            </span>
+          </div>
 
           {loading ? (
-            <div className="max-w-4xl mx-auto space-y-8">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="animate-pulse">
-                  <div className="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded w-2/3 mb-4"></div>
-                  <div className="flex gap-4 text-sm">
-                    <div className="h-3 bg-gray-200 rounded w-20"></div>
-                    <div className="h-3 bg-gray-200 rounded w-16"></div>
-                    <div className="h-3 bg-gray-200 rounded w-12"></div>
+            <div className={styles.articleList}>
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className={`${styles.articleItem} ${styles.skeleton}`}>
+                  <div className={styles.articleContent}>
+                    <div className={`${styles.skeletonLine} ${styles.short}`}></div>
+                    <div className={`${styles.skeletonLine} ${styles.medium}`}></div>
+                    <div className={styles.skeletonLine}></div>
+                    <div className={`${styles.skeletonLine} ${styles.short}`}></div>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="max-w-4xl mx-auto">
-              {/* Featured Posts */}
-              {featuredPosts.length > 0 && (
-                <section className="mb-16">
-                  <div className="flex items-center gap-2 mb-8">
-                    <h2 className="text-2xl font-bold">{t.featuredArticles}</h2>
-                    <Badge variant="secondary">{t.featured}</Badge>
-                  </div>
-                  <div className="space-y-8">
-                    {featuredPosts.map((post) => (
-                      <article key={post.id} className="group border-b border-border pb-8 last:border-b-0">
-                        <div className="space-y-3">
-                          <div className="flex items-center gap-2">
-                            {post.category && (
-                              <Badge variant="outline">{post.category.name}</Badge>
-                            )}
-                            <Badge className="bg-primary/10 text-primary hover:bg-primary/20">{t.featured}</Badge>
-                          </div>
-                          
-                          <h3 className="text-2xl font-bold leading-tight">
-                            <Link 
-                              href={`/blog/${post.slug}`}
-                              className="hover:text-primary transition-colors"
-                            >
-                              {post.title}
-                            </Link>
-                          </h3>
-                          
-                          <p className="text-muted-foreground leading-relaxed">
-                            {getContentPreview(post.content || post.excerpt, 120)}
-                          </p>
-                          
-                          <div className="flex items-center gap-6 text-sm text-muted-foreground">
-                            <div className="flex items-center gap-1">
-                              <Calendar className="h-4 w-4" />
-                              <span>{formatDate(post.createdAt)}</span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <Clock className="h-4 w-4" />
-                              <span>{post.readTime || 5} min read</span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <Eye className="h-4 w-4" />
-                              <span>{post.views.toLocaleString()}</span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <FileText className="h-4 w-4" />
-                              <span>{countWords(post.content)} words</span>
-                            </div>
-                          </div>
-                        </div>
-                      </article>
-                    ))}
-                  </div>
-                </section>
-              )}
-
+            <>
               {/* All Articles */}
-              {(regularPosts.length > 0 || featuredPosts.length > 0) ? (
-                <section className={featuredPosts.length > 0 ? "border-t border-border pt-16" : ""}>
-                  <h2 className="text-2xl font-bold mb-8">
-                    {featuredPosts.length > 0 ? 'All Articles' : 'Latest Articles'}
-                  </h2>
-                  <div className="space-y-8">
-                    {(featuredPosts.length > 0 ? regularPosts : filteredPosts).map((post) => (
-                      <article key={post.id} className="group border-b border-border pb-8 last:border-b-0">
-                        <div className="space-y-3">
-                          <div className="flex items-center gap-2">
+              {filteredPosts.length > 0 ? (
+                <section>
+                  <div className={styles.sectionHeader}>
+                    <h2 className={styles.sectionTitle}>{t.latestArticles}</h2>
+                  </div>
+                  <div className={styles.articleList}>
+                    {filteredPosts.map((post, index) => (
+                      <Link
+                        key={post.id}
+                        href={`/blog/${post.slug}`}
+                        className={styles.articleItem}
+                      >
+                        <div className={styles.lineGutter}>
+                          {[...Array(4)].map((_, i) => (
+                            <span key={i} className={styles.lineNumber}>{index * 10 + i + 1}</span>
+                          ))}
+                        </div>
+                        <div className={styles.articleContent}>
+                          <div className={styles.articleHeader}>
                             {post.category && (
-                              <Badge variant="outline">{post.category.name}</Badge>
+                              <span className={styles.articleCategory}>{post.category.name}</span>
+                            )}
+                            {post.featured && (
+                              <span className={styles.articleFeatured}>{t.featured}</span>
                             )}
                           </div>
-                          
-                          <h3 className="text-xl font-bold leading-tight">
-                            <Link 
-                              href={`/blog/${post.slug}`}
-                              className="hover:text-primary transition-colors"
-                            >
-                              {post.title}
-                            </Link>
-                          </h3>
-                          
-                          <p className="text-muted-foreground leading-relaxed">
-                            {getContentPreview(post.content || post.excerpt, 120)}
+                          <h3 className={styles.articleTitle}>{post.title}</h3>
+                          <p className={styles.articleExcerpt}>
+                            {getContentPreview(post.content || post.excerpt, 100)}
                           </p>
-                          
-                          <div className="flex items-center gap-6 text-sm text-muted-foreground">
-                            <div className="flex items-center gap-1">
-                              <Calendar className="h-4 w-4" />
-                              <span>{formatDate(post.createdAt)}</span>
+                          <div className={styles.articleClosing}>{'}'}</div>
+                          <div className={styles.articleMeta}>
+                            <div className={styles.metaItem}>
+                              <Calendar className={styles.metaIcon} aria-hidden="true" />
+                              <span className={styles.metaValue}>{formatDate(post.createdAt)}</span>
                             </div>
-                            <div className="flex items-center gap-1">
-                              <Clock className="h-4 w-4" />
-                              <span>{post.readTime || 5} min read</span>
+                            <div className={styles.metaItem}>
+                              <Clock className={styles.metaIcon} aria-hidden="true" />
+                              <span className={styles.metaValue}>{post.readTime || 5} min</span>
                             </div>
-                            <div className="flex items-center gap-1">
-                              <Eye className="h-4 w-4" />
-                              <span>{post.views.toLocaleString()}</span>
+                            <div className={styles.metaItem}>
+                              <Eye className={styles.metaIcon} aria-hidden="true" />
+                              <span className={styles.metaValue}>{post.views.toLocaleString()}</span>
                             </div>
-                            <div className="flex items-center gap-1">
-                              <FileText className="h-4 w-4" />
-                              <span>{countWords(post.content)} words</span>
-                            </div>
+                            {post.tags.length > 0 && (
+                              <div className={styles.articleTags}>
+                                {post.tags.slice(0, 3).map(tag => (
+                                  <span key={tag.slug} className={styles.tagItem}>{tag.name}</span>
+                                ))}
+                              </div>
+                            )}
                           </div>
                         </div>
-                      </article>
+                      </Link>
                     ))}
                   </div>
                 </section>
               ) : (
-                <div className="text-center py-16">
-                  <BookOpen className="h-16 w-16 mx-auto text-muted-foreground/40 mb-4" />
-                  <h3 className="text-xl font-semibold mb-2">{t.noArticlesFound}</h3>
-                  <p className="text-muted-foreground mb-6">
-                    {selectedCategory !== 'all' 
+                <div className={styles.emptyState}>
+                  <Terminal className={styles.emptyIcon} aria-hidden="true" />
+                  <h3 className={styles.emptyTitle}>{t.noArticlesFound}</h3>
+                  <p className={styles.emptyDescription}>
+                    {selectedCategory !== 'all'
                       ? t.tryAdjusting
                       : t.noPublished
                     }
@@ -297,9 +280,7 @@ export default function BlogPage() {
                   {selectedCategory !== 'all' && (
                     <Button
                       variant="outline"
-                      onClick={() => {
-                        setSelectedCategory('all')
-                      }}
+                      onClick={() => setSelectedCategory('all')}
                     >
                       {t.clearFilters}
                     </Button>
@@ -309,27 +290,32 @@ export default function BlogPage() {
 
               {/* Categories Section */}
               {categories.length > 0 && (
-                <section className="mt-16 pt-16 border-t">
-                  <h2 className="text-2xl font-bold mb-8">{t.browseByCategory}</h2>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <section className={styles.categoriesSection}>
+                  <div className={styles.sectionHeader}>
+                    <h2 className={styles.sectionTitle}>{t.browseByCategory}</h2>
+                  </div>
+                  <div className={styles.categoriesGrid}>
                     {categories.map((category) => (
-                      <Card key={category.id} className="hover:shadow-md transition-shadow cursor-pointer">
-                        <CardContent className="p-4 text-center">
-                          <h3 className="font-semibold">{category.name}</h3>
-                          <p className="text-sm text-muted-foreground">
-                            {posts.filter(p => p.category?.slug === category.slug && p.published).length} {t.articles}
-                          </p>
-                        </CardContent>
-                      </Card>
+                      <button
+                        key={category.id}
+                        className={styles.categoryCard}
+                        onClick={() => setSelectedCategory(category.slug)}
+                        type="button"
+                      >
+                        <div className={styles.categoryName}>{category.name}/</div>
+                        <div className={styles.categoryCount}>
+                          <span>{posts.filter(p => p.category?.slug === category.slug && p.published).length}</span> {t.articles}
+                        </div>
+                      </button>
                     ))}
                   </div>
                 </section>
               )}
-            </div>
+            </>
           )}
         </div>
       </main>
-      
+
       <Footer />
     </div>
   )

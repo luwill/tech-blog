@@ -1,46 +1,51 @@
 import { generateSEO } from '@/lib/seo'
+import { db } from '@/lib/db'
 
-// Generate metadata for SEO
+// Generate metadata for SEO using direct database access
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  
+
   try {
-    // Use localhost for development, production URL for production
-    const isDev = process.env.NODE_ENV === 'development'
-    const baseUrl = isDev 
-      ? 'http://localhost:3000'  // Default Next.js port
-      : (process.env.NEXT_PUBLIC_BASE_URL || `https://${process.env.VERCEL_URL}` || 'https://www.louwill.com')
-    
-    const response = await fetch(`${baseUrl}/api/posts/slug/${slug}`, {
-      cache: 'no-store',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      // Add timeout for better error handling
-      signal: AbortSignal.timeout(10000)
+    // Direct database query instead of HTTP fetch to avoid timeout
+    const post = await db.post.findUnique({
+      where: { slug, published: true },
+      select: {
+        title: true,
+        slug: true,
+        excerpt: true,
+        createdAt: true,
+        updatedAt: true,
+        author: {
+          select: { name: true }
+        },
+        category: {
+          select: { name: true }
+        },
+        tags: {
+          select: { name: true }
+        }
+      }
     })
-    
-    if (!response.ok) {
+
+    if (!post) {
       return generateSEO({
         title: 'Post not found',
         description: 'The requested blog post could not be found.'
       })
     }
-    
-    const { post } = await response.json()
-    
+
     return generateSEO({
       title: post.title,
-      description: post.excerpt,
+      description: post.excerpt || '',
       url: `/blog/${post.slug}`,
       type: 'article',
-      publishedTime: post.createdAt,
-      modifiedTime: post.updatedAt,
-      authors: [post.author.name],
+      publishedTime: post.createdAt.toISOString(),
+      modifiedTime: post.updatedAt.toISOString(),
+      authors: [post.author.name || 'LouWill'],
       section: post.category?.name,
-      tags: post.tags.map((tag: { name: string }) => tag.name),
+      tags: post.tags.map((tag) => tag.name),
       keywords: [
-        ...post.tags.map((tag: { name: string }) => tag.name),
+        ...post.tags.map((tag) => tag.name),
         post.category?.name,
         'AI', 'Technology', 'Blog', 'LouWill'
       ].filter(Boolean)

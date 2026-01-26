@@ -1,0 +1,227 @@
+/**
+ * Input Override Styles
+ * Terminal/command-line style input enhancements
+ */
+
+/* Base input styling */
+[data-slot="input"],
+[data-slot="textarea"] {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  background: var(--terminal-bg-deepest);
+  border: 1px solid var(--terminal-border-default);
+  border-radius: var(--terminal-radius-sm);
+  color: var(--terminal-text-primary);
+  caret-color: var(--neon-primary);
+  transition: all var(--transition-fast);
+}
+
+/* Placeholder styling */
+[data-slot="input"]::placeholder,
+[data-slot="textarea"]::placeholder {
+  color: var(--terminal-text-tertiary);
+  font-style: italic;
+  opacity: 0.7;
+}
+
+/* Focus state - neon glow */
+[data-slot="input"]:focus,
+[data-slot="textarea"]:focus,
+[data-slot="input"]:focus-visible,
+[data-slot="textarea"]:focus-visible {
+  border-color: var(--neon-primary);
+  box-shadow: 0 0 0 3px var(--neon-glow);
+  outline: none;
+}
+
+/* Hover state */
+[data-slot="input"]:hover:not(:focus),
+[data-slot="textarea"]:hover:not(:focus) {
+  border-color: var(--terminal-border-active);
+}
+
+/* Invalid state */
+[data-slot="input"][aria-invalid="true"],
+[data-slot="textarea"][aria-invalid="true"] {
+  border-color: var(--syntax-error);
+  box-shadow: 0 0 0 3px oklch(0.65 0.25 25 / 20%);
+}
+
+/* Disabled state */
+[data-slot="input"]:disabled,
+[data-slot="textarea"]:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--terminal-bg-medium);
+}
+
+/* Command-line style input */
+.command-input {
+  position: relative;
+  padding-left: 2rem;
+}
+
+.command-input::before {
+  content: '$ ';
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--syntax-string);
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+/* Search input style */
+.search-input {
+  position: relative;
+  padding-left: 2.5rem;
+}
+
+.search-input-wrapper {
+  position: relative;
+}
+
+.search-input-wrapper [data-slot="input"] {
+  padding-left: 2.5rem;
+}
+
+.search-input-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--terminal-text-tertiary);
+  width: 16px;
+  height: 16px;
+}
+
+/* Input with prefix/suffix */
+.input-group {
+  display: flex;
+  align-items: stretch;
+}
+
+.input-prefix,
+.input-suffix {
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  background: var(--terminal-bg-medium);
+  border: 1px solid var(--terminal-border-default);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--terminal-text-secondary);
+  white-space: nowrap;
+}
+
+.input-prefix {
+  border-right: none;
+  border-radius: var(--terminal-radius-sm) 0 0 var(--terminal-radius-sm);
+}
+
+.input-suffix {
+  border-left: none;
+  border-radius: 0 var(--terminal-radius-sm) var(--terminal-radius-sm) 0;
+}
+
+.input-group [data-slot="input"] {
+  border-radius: 0;
+}
+
+.input-group [data-slot="input"]:first-child {
+  border-radius: var(--terminal-radius-sm) 0 0 var(--terminal-radius-sm);
+}
+
+.input-group [data-slot="input"]:last-child {
+  border-radius: 0 var(--terminal-radius-sm) var(--terminal-radius-sm) 0;
+}
+
+/* Textarea enhancements */
+[data-slot="textarea"] {
+  min-height: 100px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+/* Code textarea */
+[data-slot="textarea"].code {
+  line-height: var(--line-height-code);
+  tab-size: 2;
+  white-space: pre;
+}
+
+/* Input label */
+[data-slot="label"] {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--terminal-text-secondary);
+  letter-spacing: 0.02em;
+  margin-bottom: 6px;
+}
+
+/* Input with syntax coloring prefix */
+.input-syntax-prefix {
+  position: relative;
+}
+
+.input-syntax-prefix [data-slot="input"] {
+  padding-left: 4rem;
+}
+
+.input-syntax-prefix::before {
+  content: attr(data-prefix);
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--syntax-keyword);
+  pointer-events: none;
+}
+
+/* Select styling */
+[data-slot="select"] {
+  font-family: var(--font-mono);
+  background: var(--terminal-bg-deepest);
+  border: 1px solid var(--terminal-border-default);
+  border-radius: var(--terminal-radius-sm);
+  color: var(--terminal-text-primary);
+  cursor: pointer;
+}
+
+[data-slot="select"]:focus {
+  border-color: var(--neon-primary);
+  box-shadow: 0 0 0 3px var(--neon-glow);
+  outline: none;
+}
+
+/* File input styling */
+[data-slot="input"][type="file"] {
+  cursor: pointer;
+}
+
+[data-slot="input"][type="file"]::file-selector-button {
+  font-family: var(--font-mono);
+  background: var(--terminal-bg-elevated);
+  border: 1px solid var(--terminal-border-default);
+  border-radius: var(--terminal-radius-xs);
+  color: var(--terminal-text-primary);
+  padding: 4px 12px;
+  margin-right: 12px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+[data-slot="input"][type="file"]::file-selector-button:hover {
+  background: var(--terminal-bg-highlight);
+  border-color: var(--neon-primary);
+}
+
+/* Light theme adjustments */
+.light [data-slot="input"],
+.light [data-slot="textarea"] {
+  background: var(--terminal-bg-elevated);
+}

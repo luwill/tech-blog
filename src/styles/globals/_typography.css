@@ -1,0 +1,339 @@
+/**
+ * Terminal/IDE Typography System
+ * Code-inspired typography patterns
+ */
+
+/* ========================================
+ * BASE TERMINAL TYPOGRAPHY
+ * ======================================== */
+
+.terminal-text {
+  font-family: var(--font-mono);
+  line-height: var(--line-height-code);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+/* ========================================
+ * HEADING STYLES - Code Comment Style
+ * ======================================== */
+
+/* Double slash comment style heading */
+.terminal-heading {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--terminal-text-accent);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.terminal-heading::before {
+  content: '// ';
+  color: var(--syntax-comment);
+  font-weight: 400;
+}
+
+/* Hash comment style heading */
+.terminal-heading-hash {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--terminal-text-accent);
+}
+
+.terminal-heading-hash::before {
+  content: '# ';
+  color: var(--syntax-comment);
+  font-weight: 400;
+}
+
+/* Function declaration style heading */
+.terminal-heading-function {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--syntax-function);
+}
+
+.terminal-heading-function::before {
+  content: 'const ';
+  color: var(--syntax-keyword);
+  font-weight: 400;
+}
+
+.terminal-heading-function::after {
+  content: ' = () => {';
+  color: var(--terminal-text-tertiary);
+  font-weight: 400;
+}
+
+/* Export style heading */
+.terminal-heading-export {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--syntax-function);
+}
+
+.terminal-heading-export::before {
+  content: 'export const ';
+  color: var(--syntax-keyword);
+  font-weight: 400;
+}
+
+/* ========================================
+ * SUBTITLE & DESCRIPTION STYLES
+ * ======================================== */
+
+/* Block comment style subtitle */
+.terminal-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--syntax-comment);
+  font-style: italic;
+}
+
+.terminal-subtitle::before {
+  content: '/* ';
+  font-style: normal;
+}
+
+.terminal-subtitle::after {
+  content: ' */';
+  font-style: normal;
+}
+
+/* JSDoc style description */
+.terminal-description {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--syntax-comment);
+  line-height: 1.5;
+}
+
+.terminal-description::before {
+  content: '* ';
+  color: var(--syntax-comment);
+}
+
+/* ========================================
+ * COMMAND LINE STYLES
+ * ======================================== */
+
+/* Command prompt */
+.terminal-prompt {
+  font-family: var(--font-mono);
+  color: var(--terminal-text-primary);
+}
+
+.terminal-prompt::before {
+  content: '$ ';
+  color: var(--syntax-string);
+  font-weight: 600;
+}
+
+/* Command with arrow prompt */
+.terminal-prompt-arrow::before {
+  content: '> ';
+  color: var(--neon-primary);
+  font-weight: 600;
+}
+
+/* Command output */
+.terminal-output {
+  font-family: var(--font-mono);
+  color: var(--terminal-text-secondary);
+  padding-left: 1rem;
+  font-size: 0.875rem;
+}
+
+/* ========================================
+ * CODE BLOCK STYLES
+ * ======================================== */
+
+/* Inline code */
+.terminal-code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--terminal-bg-elevated);
+  color: var(--syntax-variable);
+  padding: 0.125rem 0.375rem;
+  border-radius: var(--terminal-radius-sm);
+}
+
+/* Variable highlight */
+.terminal-var {
+  color: var(--syntax-variable);
+  font-family: var(--font-mono);
+}
+
+/* String highlight */
+.terminal-string {
+  color: var(--syntax-string);
+  font-family: var(--font-mono);
+}
+
+.terminal-string::before,
+.terminal-string::after {
+  content: '"';
+  color: var(--syntax-string);
+}
+
+/* Keyword highlight */
+.terminal-keyword {
+  color: var(--syntax-keyword);
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+/* Number highlight */
+.terminal-number {
+  color: var(--syntax-number);
+  font-family: var(--font-mono);
+}
+
+/* Type highlight */
+.terminal-type {
+  color: var(--syntax-type);
+  font-family: var(--font-mono);
+}
+
+/* ========================================
+ * LABEL STYLES
+ * ======================================== */
+
+/* File path label */
+.terminal-filepath {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--terminal-text-secondary);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.terminal-filepath span {
+  color: var(--terminal-text-tertiary);
+}
+
+/* Version label */
+.terminal-version {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--syntax-number);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.terminal-version::before {
+  content: 'v';
+}
+
+/* Status label */
+.terminal-status {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.terminal-status-success {
+  color: var(--syntax-string);
+}
+
+.terminal-status-warning {
+  color: var(--syntax-constant);
+}
+
+.terminal-status-error {
+  color: var(--syntax-error);
+}
+
+/* ========================================
+ * LIST STYLES
+ * ======================================== */
+
+/* Terminal list with arrow prefix */
+.terminal-list {
+  font-family: var(--font-mono);
+  list-style: none;
+  padding: 0;
+}
+
+.terminal-list li {
+  padding: 0.25rem 0;
+  color: var(--terminal-text-primary);
+}
+
+.terminal-list li::before {
+  content: '> ';
+  color: var(--syntax-string);
+  font-weight: 600;
+}
+
+/* Directory tree style list */
+.terminal-tree {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  list-style: none;
+  padding: 0;
+}
+
+.terminal-tree li {
+  position: relative;
+  padding-left: 1.5rem;
+  color: var(--terminal-text-secondary);
+}
+
+.terminal-tree li::before {
+  content: '├── ';
+  position: absolute;
+  left: 0;
+  color: var(--terminal-text-tertiary);
+}
+
+.terminal-tree li:last-child::before {
+  content: '└── ';
+}
+
+/* ========================================
+ * LINK STYLES
+ * ======================================== */
+
+.terminal-link {
+  font-family: var(--font-mono);
+  color: var(--syntax-variable);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.terminal-link:hover {
+  color: var(--neon-primary);
+  text-decoration: underline;
+}
+
+/* Command style link */
+.terminal-link-command::before {
+  content: '$ ';
+  color: var(--syntax-string);
+}
+
+/* ========================================
+ * DECORATIVE TEXT
+ * ======================================== */
+
+/* ASCII art container */
+.terminal-ascii {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  line-height: 1.2;
+  color: var(--neon-primary);
+  white-space: pre;
+  letter-spacing: 0;
+}
+
+/* Section divider */
+.terminal-divider {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--syntax-comment);
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.terminal-divider::before {
+  content: '// ════════════════════════════════════════';
+}

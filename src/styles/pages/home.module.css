@@ -1,0 +1,304 @@
+/**
+ * Home Page Styles
+ * Terminal/IDE aesthetic landing page
+ */
+
+/* Hero Section - Terminal Window Style */
+.hero {
+  padding: 60px 0 80px;
+  position: relative;
+}
+
+.heroTerminal {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.heroContent {
+  padding: 24px;
+}
+
+/* Typing animation for whoami */
+.whoamiLine {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.prompt {
+  color: var(--syntax-string);
+  font-weight: 600;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.command {
+  color: var(--terminal-text-primary);
+}
+
+/* Output styling */
+.output {
+  color: var(--terminal-text-secondary);
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
+
+.outputHighlight {
+  color: var(--neon-primary);
+  font-weight: 500;
+}
+
+/* Name/Title styling */
+.heroName {
+  font-size: 1.5rem;
+  color: #2E54A1;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.heroTitle {
+  color: var(--syntax-comment);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+
+/* ls command output - grid of expertise */
+.expertiseGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px 24px;
+  margin-left: 20px;
+  margin-bottom: 24px;
+}
+
+.expertiseItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #2E54A1;
+}
+
+.expertiseItem::before {
+  content: '>';
+  color: var(--syntax-keyword);
+}
+
+/* Blinking cursor */
+.cursor {
+  display: inline-block;
+  width: 10px;
+  height: 20px;
+  background: #2E54A1;
+  margin-left: 4px;
+  animation: cursor-blink 1s step-end infinite;
+}
+
+/* CTA buttons */
+.ctaButtons {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+  margin-left: 20px;
+}
+
+/* Features Section */
+.features {
+  padding: 80px 0;
+  background: var(--terminal-bg-medium);
+}
+
+.featuresHeader {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.featuresTitle {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  color: var(--terminal-text-primary);
+  margin-bottom: 8px;
+}
+
+.featuresTitle::before {
+  content: '// ';
+  color: var(--syntax-comment);
+}
+
+.featuresSubtitle {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--terminal-text-secondary);
+}
+
+/* Feature cards grid */
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Feature card */
+.featureCard {
+  background: var(--terminal-bg-deep);
+  border: 1px solid var(--terminal-border-default);
+  border-radius: var(--terminal-radius-lg);
+  overflow: hidden;
+  transition: all var(--transition-normal);
+}
+
+.featureCard:hover {
+  border-color: var(--neon-primary);
+  box-shadow: var(--terminal-shadow-glow);
+  transform: translateY(-4px);
+}
+
+.featureCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--terminal-bg-medium);
+  border-bottom: 1px solid var(--terminal-border-subtle);
+}
+
+.featureCardDots {
+  display: flex;
+  gap: 6px;
+}
+
+.featureCardDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.featureCardDot.red { background: var(--chrome-red); }
+.featureCardDot.yellow { background: var(--chrome-yellow); }
+.featureCardDot.green { background: var(--chrome-green); }
+
+.featureCardTitle {
+  flex: 1;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--terminal-text-secondary);
+}
+
+.featureCardContent {
+  padding: 20px;
+}
+
+.featureIcon {
+  width: 48px;
+  height: 48px;
+  color: var(--neon-primary);
+  margin-bottom: 16px;
+}
+
+.featureName {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  color: var(--syntax-function);
+  margin-bottom: 8px;
+}
+
+.featureName::before {
+  content: 'const ';
+  color: var(--syntax-keyword);
+}
+
+.featureName::after {
+  content: ' = {';
+  color: var(--terminal-text-tertiary);
+}
+
+.featureDescription {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--terminal-text-secondary);
+  line-height: 1.6;
+  padding-left: 16px;
+}
+
+.featureDescription::after {
+  content: '\a};';
+  white-space: pre;
+  color: var(--terminal-text-tertiary);
+  display: block;
+  margin-left: -16px;
+  margin-top: 8px;
+}
+
+/* CTA Section */
+.cta {
+  padding: 80px 0;
+  text-align: center;
+}
+
+.ctaTerminal {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.ctaContent {
+  padding: 24px;
+  text-align: left;
+}
+
+.ctaTitle {
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+  color: var(--terminal-text-primary);
+  margin-bottom: 16px;
+}
+
+.ctaDescription {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--terminal-text-secondary);
+  margin-bottom: 24px;
+}
+
+.ctaButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero {
+    padding: 40px 0 60px;
+  }
+
+  .heroName {
+    font-size: 1.25rem;
+  }
+
+  .expertiseGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ctaButtons {
+    flex-direction: column;
+    margin-left: 0;
+  }
+
+  .featuresGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroContent {
+    padding: 16px;
+  }
+
+  .output,
+  .expertiseGrid,
+  .ctaButtons {
+    margin-left: 0;
+  }
+}

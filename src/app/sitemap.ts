@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next'
-import { prisma } from '@/lib/prisma'
+import { db } from '@/lib/db'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.louwill.com'
@@ -35,7 +35,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     // Dynamic routes from database
     const [posts, categories] = await Promise.all([
-      prisma.post.findMany({
+      db.post.findMany({
         where: {
           published: true,
         },
@@ -47,7 +47,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           updatedAt: 'desc',
         },
       }),
-      prisma.category.findMany({
+      db.category.findMany({
         select: {
           slug: true,
         },

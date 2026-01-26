@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
+import { db } from "@/lib/db"
 
 // GET /api/posts/slug/[slug] - 通过slug获取文章
 export async function GET(
@@ -9,7 +9,7 @@ export async function GET(
   try {
     const { slug } = await params
 
-    const post = await prisma.post.findUnique({
+    const post = await db.post.findUnique({
       where: { 
         slug,
         published: true // 只返回已发布的文章
@@ -46,7 +46,7 @@ export async function GET(
     }
 
     // 增加浏览量
-    await prisma.post.update({
+    await db.post.update({
       where: { slug },
       data: {
         views: {

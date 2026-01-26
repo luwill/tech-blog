@@ -1,6 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { handleApiError } from '@/lib/error-handler'
+import { requireAdminAccess } from '@/lib/auth-utils'
+
+// Anonymize IP address for privacy (hide last octet)
+function anonymizeIp(ip: string): string {
+  if (!ip || ip === 'unknown') return ip
+  const parts = ip.split('.')
+  if (parts.length === 4) {
+    return `${parts[0]}.${parts[1]}.${parts[2]}.xxx`
+  }
+  // Handle IPv6 by truncating
+  if (ip.includes(':')) {
+    return ip.split(':').slice(0, 4).join(':') + ':xxxx'
+  }
+  return ip
+}
 
 // Update online user status
 export async function POST(request: NextRequest) {
@@ -48,9 +63,12 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Get online users count
+// Get online users count (admin only)
 export async function GET() {
   try {
+    // Require admin authentication
+    await requireAdminAccess()
+
     // Consider users online if they were active in the last 5 minutes
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000)
     
@@ -96,11 +114,19 @@ export async function GET() {
       },
     })
     
+    // Anonymize IP addresses before returning
+    const anonymizedVisitors = recentVisitors.map(visitor => ({
+      ...visitor,
+      ipAddress: visitor.ipAddress ? anonymizeIp(visitor.ipAddress) : null,
+      // Truncate sessionId for privacy (show only first 8 chars)
+      sessionId: visitor.sessionId.substring(0, 8) + '...',
+    }))
+
     return NextResponse.json({
       success: true,
       data: {
         onlineCount: Number(onlineCount),
-        recentVisitors,
+        recentVisitors: anonymizedVisitors,
       },
     })
   } catch (error) {

@@ -2,9 +2,36 @@ import { NextRequest, NextResponse } from 'next/server'
 import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 import { existsSync } from 'fs'
+import { requireAdminAccess } from '@/lib/auth-utils'
+import { handleApiError } from '@/lib/error-handler'
+import { uploadRateLimiter } from '@/lib/rate-limiter'
+
+// Validate file magic bytes to prevent extension spoofing
+function validateFileMagicBytes(buffer: Buffer, mimeType: string): boolean {
+  const signatures: Record<string, number[][]> = {
+    'image/jpeg': [[0xFF, 0xD8, 0xFF]],
+    'image/jpg': [[0xFF, 0xD8, 0xFF]],
+    'image/png': [[0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]],
+    'image/gif': [[0x47, 0x49, 0x46, 0x38, 0x37, 0x61], [0x47, 0x49, 0x46, 0x38, 0x39, 0x61]],
+    'image/webp': [[0x52, 0x49, 0x46, 0x46]], // RIFF header, WebP follows
+  }
+
+  const sigs = signatures[mimeType]
+  if (!sigs) return false
+
+  return sigs.some(sig =>
+    sig.every((byte, index) => buffer[index] === byte)
+  )
+}
 
 export async function POST(request: NextRequest) {
   try {
+    // Apply rate limiting (5 uploads per minute)
+    await uploadRateLimiter.limit(request)
+
+    // Require admin authentication
+    await requireAdminAccess()
+
     const data = await request.formData()
     const file = data.get('file') as File
     
@@ -45,11 +72,20 @@ export async function POST(request: NextRequest) {
       await mkdir(uploadsDir, { recursive: true })
     }
 
-    // Convert file to buffer and save
+    // Convert file to buffer
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
+
+    // Validate file magic bytes to prevent extension spoofing attacks
+    if (!validateFileMagicBytes(buffer, file.type)) {
+      return NextResponse.json(
+        { success: false, error: 'File content does not match declared type. Possible file spoofing detected.' },
+        { status: 400 }
+      )
+    }
+
+    // Save file
     const filePath = join(uploadsDir, filename)
-    
     await writeFile(filePath, buffer)
     
     // Return the public URL
@@ -63,10 +99,6 @@ export async function POST(request: NextRequest) {
       type: file.type
     })
   } catch (error) {
-    console.error('Error uploading file:', error)
-    return NextResponse.json(
-      { success: false, error: 'Failed to upload file' },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }

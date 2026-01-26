@@ -1,0 +1,178 @@
+/**
+ * Button Override Styles
+ * Terminal/IDE style button enhancements
+ */
+
+/* Base button overrides */
+[data-slot="button"] {
+  font-family: var(--font-mono);
+  border-radius: var(--terminal-radius-sm);
+  letter-spacing: 0.02em;
+  transition: all var(--transition-normal);
+}
+
+/* Primary button - neon glow effect */
+[data-slot="button"].bg-primary,
+[data-slot="button"][class*="bg-primary"] {
+  background: var(--primary) !important;
+  border: 1px solid var(--primary);
+  color: var(--primary-foreground) !important;
+  box-shadow: 0 0 8px var(--neon-glow);
+}
+
+[data-slot="button"].bg-primary:hover,
+[data-slot="button"][class*="bg-primary"]:hover {
+  background: var(--primary) !important;
+  filter: brightness(1.1);
+  box-shadow:
+    0 0 15px var(--neon-glow),
+    0 0 30px var(--neon-glow);
+  transform: translateY(-1px);
+}
+
+[data-slot="button"].bg-primary:active,
+[data-slot="button"][class*="bg-primary"]:active {
+  transform: translateY(0);
+  filter: brightness(0.95);
+  box-shadow: 0 0 8px var(--neon-glow);
+}
+
+/* Outline button - terminal border style */
+[data-slot="button"].border,
+[data-slot="button"][class*="border"],
+[data-slot="button"].bg-background {
+  border: 1px solid #2E54A1 !important;
+  background: transparent !important;
+  color: #2E54A1 !important;
+}
+
+[data-slot="button"].border:hover,
+[data-slot="button"][class*="border"]:hover,
+[data-slot="button"].bg-background:hover {
+  border-color: #2E54A1 !important;
+  background: #2E54A1 !important;
+  color: #ffffff !important;
+}
+
+/* Ghost button */
+[data-slot="button"][class*="ghost"] {
+  color: var(--terminal-text-secondary);
+}
+
+[data-slot="button"][class*="ghost"]:hover {
+  background: var(--terminal-bg-elevated);
+  color: var(--terminal-text-primary);
+}
+
+/* Destructive button */
+[data-slot="button"][class*="destructive"],
+[data-slot="button"].bg-destructive {
+  background: var(--syntax-error);
+  border: 1px solid var(--syntax-error);
+}
+
+[data-slot="button"][class*="destructive"]:hover,
+[data-slot="button"].bg-destructive:hover {
+  box-shadow: 0 0 15px oklch(0.65 0.25 25 / 40%);
+}
+
+/* Command-line style button variant */
+.command-button {
+  position: relative;
+  padding-left: 2rem;
+}
+
+.command-button::before {
+  content: '$ ';
+  position: absolute;
+  left: 0.75rem;
+  color: var(--syntax-string);
+  font-weight: 600;
+}
+
+/* Run/Execute button style */
+.run-button {
+  position: relative;
+  padding-left: 2.5rem;
+}
+
+.run-button::before {
+  content: '';
+  position: absolute;
+  left: 0.75rem;
+  width: 0;
+  height: 0;
+  border-left: 10px solid currentColor;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+}
+
+/* Icon button with terminal feel */
+[data-slot="button"][class*="size-9"],
+[data-slot="button"][class*="icon"] {
+  border-radius: var(--terminal-radius-sm);
+}
+
+[data-slot="button"][class*="size-9"]:hover,
+[data-slot="button"][class*="icon"]:hover {
+  background: var(--terminal-bg-elevated);
+}
+
+/* Button group styling */
+.button-group {
+  display: inline-flex;
+  border-radius: var(--terminal-radius-sm);
+  overflow: hidden;
+}
+
+.button-group [data-slot="button"] {
+  border-radius: 0;
+  border-right: 1px solid var(--terminal-border-subtle);
+}
+
+.button-group [data-slot="button"]:first-child {
+  border-top-left-radius: var(--terminal-radius-sm);
+  border-bottom-left-radius: var(--terminal-radius-sm);
+}
+
+.button-group [data-slot="button"]:last-child {
+  border-right: none;
+  border-top-right-radius: var(--terminal-radius-sm);
+  border-bottom-right-radius: var(--terminal-radius-sm);
+}
+
+/* Loading state */
+[data-slot="button"].loading {
+  position: relative;
+  color: transparent;
+}
+
+[data-slot="button"].loading::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: button-spin 0.6s linear infinite;
+}
+
+@keyframes button-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Focus state */
+[data-slot="button"]:focus-visible {
+  outline: 2px solid var(--neon-primary);
+  outline-offset: 2px;
+}
+
+/* Disabled state */
+[data-slot="button"]:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}

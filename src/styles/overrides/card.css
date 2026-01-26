@@ -1,0 +1,198 @@
+/**
+ * Card Override Styles
+ * Terminal window style card enhancements
+ */
+
+/* Base card - terminal window style */
+[data-slot="card"] {
+  background: var(--terminal-bg-deep);
+  border: 1px solid var(--terminal-border-default);
+  border-radius: var(--terminal-radius-lg);
+  box-shadow: var(--terminal-shadow-md);
+  transition: all var(--transition-normal);
+}
+
+/* Card hover effect */
+[data-slot="card"]:hover {
+  border-color: var(--terminal-border-active);
+  box-shadow: var(--terminal-shadow-lg);
+}
+
+/* Interactive card (clickable) */
+[data-slot="card"].interactive:hover,
+[data-slot="card"][role="button"]:hover,
+a [data-slot="card"]:hover {
+  border-color: var(--neon-primary);
+  box-shadow: var(--terminal-shadow-glow);
+  transform: translateY(-2px);
+}
+
+/* Card header - title bar style */
+[data-slot="card-header"] {
+  padding: 12px 16px;
+  background: var(--terminal-bg-medium);
+  border-bottom: 1px solid var(--terminal-border-subtle);
+  border-radius: var(--terminal-radius-lg) var(--terminal-radius-lg) 0 0;
+}
+
+/* Card title - monospace font */
+[data-slot="card-title"] {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--terminal-text-primary);
+  letter-spacing: 0.02em;
+}
+
+/* Card description */
+[data-slot="card-description"] {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--terminal-text-secondary);
+}
+
+/* Card content */
+[data-slot="card-content"] {
+  padding: 16px;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--terminal-text-secondary);
+}
+
+/* Card footer - status bar style */
+[data-slot="card-footer"] {
+  padding: 10px 16px;
+  background: var(--terminal-bg-medium);
+  border-top: 1px solid var(--terminal-border-subtle);
+  border-radius: 0 0 var(--terminal-radius-lg) var(--terminal-radius-lg);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--terminal-text-tertiary);
+}
+
+/* Terminal window variant with traffic lights */
+.terminal-card {
+  position: relative;
+}
+
+.terminal-card [data-slot="card-header"]::before {
+  content: '';
+  display: inline-flex;
+  gap: 8px;
+  margin-right: 12px;
+}
+
+.terminal-card-lights {
+  display: inline-flex;
+  gap: 8px;
+  margin-right: 12px;
+}
+
+.terminal-card-light {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.terminal-card-light.red {
+  background: var(--chrome-red);
+}
+
+.terminal-card-light.yellow {
+  background: var(--chrome-yellow);
+}
+
+.terminal-card-light.green {
+  background: var(--chrome-green);
+}
+
+/* Featured card variant */
+[data-slot="card"].featured {
+  border-color: var(--neon-primary);
+  box-shadow: 0 0 20px var(--neon-glow);
+}
+
+[data-slot="card"].featured [data-slot="card-header"] {
+  background: linear-gradient(
+    90deg,
+    var(--terminal-bg-medium) 0%,
+    var(--terminal-bg-elevated) 100%
+  );
+}
+
+/* Elevated card variant */
+[data-slot="card"].elevated {
+  box-shadow:
+    var(--terminal-shadow-lg),
+    0 0 30px var(--neon-glow);
+}
+
+/* Code card style */
+[data-slot="card"].code-style {
+  font-family: var(--font-mono);
+}
+
+[data-slot="card"].code-style [data-slot="card-header"] {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+[data-slot="card"].code-style [data-slot="card-header"]::before {
+  content: '● ● ●';
+  display: inline-block;
+  font-size: 0.5rem;
+  letter-spacing: 4px;
+  color: var(--terminal-text-tertiary);
+}
+
+/* Compact card */
+[data-slot="card"].compact [data-slot="card-header"] {
+  padding: 8px 12px;
+}
+
+[data-slot="card"].compact [data-slot="card-content"] {
+  padding: 12px;
+}
+
+[data-slot="card"].compact [data-slot="card-footer"] {
+  padding: 8px 12px;
+}
+
+/* Card grid layout */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+/* Nested card styling */
+[data-slot="card"] [data-slot="card"] {
+  background: var(--terminal-bg-medium);
+  box-shadow: none;
+}
+
+/* Card states */
+[data-slot="card"].loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+[data-slot="card"].error {
+  border-color: var(--syntax-error);
+}
+
+[data-slot="card"].success {
+  border-color: var(--chrome-green);
+}
+
+/* Light theme adjustments */
+.light [data-slot="card"] {
+  background: var(--terminal-bg-elevated);
+  border-color: var(--terminal-border-subtle);
+}
+
+.light [data-slot="card-header"],
+.light [data-slot="card-footer"] {
+  background: var(--terminal-bg-medium);
+}

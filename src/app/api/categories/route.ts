@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { generateSlug } from "@/lib/markdown"
+import { requireAdminAccess } from "@/lib/auth-utils"
+import { handleApiError } from "@/lib/error-handler"
 
 // GET /api/categories - 获取分类列表
 export async function GET() {
@@ -22,7 +24,12 @@ export async function GET() {
       }
     })
 
-    return NextResponse.json(categories)
+    // Add cache headers - categories change infrequently
+    return NextResponse.json({ categories }, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600'
+      }
+    })
   } catch (error) {
     console.error("Error fetching categories:", error)
     return NextResponse.json(
@@ -32,9 +39,12 @@ export async function GET() {
   }
 }
 
-// POST /api/categories - 创建分类
+// POST /api/categories - 创建分类 (admin only)
 export async function POST(request: NextRequest) {
   try {
+    // Require admin authentication
+    await requireAdminAccess()
+
     const body = await request.json()
     const { name, description } = body
 
@@ -69,10 +79,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(category, { status: 201 })
   } catch (error) {
-    console.error("Error creating category:", error)
-    return NextResponse.json(
-      { error: "Failed to create category" },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }

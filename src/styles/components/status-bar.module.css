@@ -1,0 +1,162 @@
+/**
+ * StatusBar Component Styles
+ * VS Code-style status bar for page footer
+ */
+
+.statusBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  height: 24px;
+  background: var(--neon-primary);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--terminal-bg-deepest);
+  user-select: none;
+  position: relative;
+  z-index: 50;
+}
+
+/* Sticky variant */
+.sticky {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+/* Left section */
+.leftSection {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* Right section */
+.rightSection {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* Status bar item */
+.statusItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px;
+  height: 100%;
+  cursor: default;
+  transition: background var(--transition-fast);
+}
+
+.statusItem:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.statusItem.clickable {
+  cursor: pointer;
+}
+
+.statusItem.clickable:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Status icon */
+.statusIcon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* Status text */
+.statusText {
+  white-space: nowrap;
+}
+
+/* Separator */
+.separator {
+  width: 1px;
+  height: 14px;
+  background: rgba(0, 0, 0, 0.2);
+  margin: 0 4px;
+}
+
+/* Status indicators */
+.statusIndicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 4px;
+}
+
+.statusIndicator.online {
+  background: var(--chrome-green);
+  box-shadow: 0 0 6px var(--chrome-green);
+}
+
+.statusIndicator.offline {
+  background: var(--chrome-red);
+}
+
+.statusIndicator.warning {
+  background: var(--chrome-yellow);
+}
+
+/* Alternative dark theme status bar */
+.dark {
+  background: var(--terminal-bg-medium);
+  color: var(--terminal-text-secondary);
+  border-top: 1px solid var(--terminal-border-subtle);
+}
+
+.dark .statusItem:hover {
+  background: var(--terminal-bg-elevated);
+}
+
+.dark .separator {
+  background: var(--terminal-border-subtle);
+}
+
+/* Minimal variant */
+.minimal {
+  height: 20px;
+  font-size: 0.6875rem;
+}
+
+.minimal .statusItem {
+  padding: 0 6px;
+}
+
+.minimal .statusIcon {
+  width: 12px;
+  height: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .statusBar {
+    height: 28px;
+    padding: 0 12px;
+  }
+
+  .statusItem {
+    padding: 0 6px;
+  }
+
+  .hideOnMobile {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .statusBar {
+    font-size: 0.6875rem;
+  }
+
+  .leftSection,
+  .rightSection {
+    gap: 0;
+  }
+}

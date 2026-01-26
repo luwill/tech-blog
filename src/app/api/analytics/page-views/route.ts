@@ -1,6 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { Prisma } from '@prisma/client'
 import { handleApiError } from '@/lib/error-handler'
+import { requireAdminAccess } from '@/lib/auth-utils'
+
+// Anonymize IP address for privacy (hide last octet)
+function anonymizeIp(ip: string): string {
+  if (!ip || ip === 'unknown') return ip
+  const parts = ip.split('.')
+  if (parts.length === 4) {
+    return `${parts[0]}.${parts[1]}.${parts[2]}.xxx`
+  }
+  // Handle IPv6 by truncating
+  if (ip.includes(':')) {
+    return ip.split(':').slice(0, 4).join(':') + ':xxxx'
+  }
+  return ip
+}
 
 // Track page view
 export async function POST(request: NextRequest) {
@@ -53,9 +69,12 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Get page view statistics
+// Get page view statistics (admin only)
 export async function GET(request: NextRequest) {
   try {
+    // Require admin authentication
+    await requireAdminAccess()
+
     const { searchParams } = new URL(request.url)
     const path = searchParams.get('path')
     const period = searchParams.get('period') || '7d' // 7d, 30d, 90d, 1y
@@ -101,19 +120,31 @@ export async function GET(request: NextRequest) {
         },
       }),
       
-      // Views grouped by day
-      db.$queryRaw`
-        SELECT 
-          DATE("visitedAt") as date,
-          COUNT(*) as views,
-          COUNT(DISTINCT "ipAddress") as unique_views
-        FROM page_views 
-        WHERE "visitedAt" >= ${startDate}
-        ${path ? db.$queryRawUnsafe('AND path = ?', path) : db.$queryRawUnsafe('')}
-        GROUP BY DATE("visitedAt")
-        ORDER BY date DESC
-        LIMIT 30
-      `,
+      // Views grouped by day (using safe parameterized query)
+      path
+        ? db.$queryRaw`
+            SELECT
+              DATE("visitedAt") as date,
+              COUNT(*) as views,
+              COUNT(DISTINCT "ipAddress") as unique_views
+            FROM page_views
+            WHERE "visitedAt" >= ${startDate}
+            AND path = ${path}
+            GROUP BY DATE("visitedAt")
+            ORDER BY date DESC
+            LIMIT 30
+          `
+        : db.$queryRaw`
+            SELECT
+              DATE("visitedAt") as date,
+              COUNT(*) as views,
+              COUNT(DISTINCT "ipAddress") as unique_views
+            FROM page_views
+            WHERE "visitedAt" >= ${startDate}
+            GROUP BY DATE("visitedAt")
+            ORDER BY date DESC
+            LIMIT 30
+          `,
     ])
     
     return NextResponse.json({

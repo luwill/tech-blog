@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import { db } from '@/lib/db'
 
 export async function GET(request: NextRequest) {
   try {
@@ -97,7 +97,7 @@ export async function GET(request: NextRequest) {
 
     // Execute search query
     const [posts, totalCount] = await Promise.all([
-      prisma.post.findMany({
+      db.post.findMany({
         where: whereClause,
         include: {
           author: {
@@ -125,7 +125,7 @@ export async function GET(request: NextRequest) {
         take: limit,
         skip: offset
       }),
-      prisma.post.count({
+      db.post.count({
         where: whereClause
       })
     ])
@@ -138,7 +138,7 @@ export async function GET(request: NextRequest) {
     // Get search suggestions if no results found
     let suggestions: string[] = []
     if (posts.length === 0 && query) {
-      const suggestedPosts = await prisma.post.findMany({
+      const suggestedPosts = await db.post.findMany({
         where: {
           published: true,
           OR: [

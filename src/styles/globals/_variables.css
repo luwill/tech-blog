@@ -1,0 +1,154 @@
+/**
+ * Terminal/IDE Theme Design Tokens
+ * VS Code inspired color system with OKLCH color space
+ */
+
+:root {
+  /* ========================================
+   * BACKGROUND HIERARCHY
+   * Layered backgrounds for depth
+   * ======================================== */
+  --terminal-bg-deepest: oklch(0.12 0 0);     /* #1e1e1e - Editor background */
+  --terminal-bg-deep: oklch(0.15 0 0);        /* #252526 - Sidebar */
+  --terminal-bg-medium: oklch(0.18 0 0);      /* #2d2d30 - Panel header */
+  --terminal-bg-elevated: oklch(0.22 0 0);    /* #3c3c3c - Hover state */
+  --terminal-bg-highlight: oklch(0.26 0 0);   /* #464647 - Selection */
+
+  /* ========================================
+   * TEXT HIERARCHY
+   * Semantic text colors
+   * ======================================== */
+  --terminal-text-primary: oklch(0.93 0.01 250);   /* #d4d4d4 - Main text */
+  --terminal-text-secondary: oklch(0.70 0 0);      /* #808080 - Muted text */
+  --terminal-text-tertiary: oklch(0.55 0 0);       /* #6e6e6e - Very muted */
+  --terminal-text-accent: oklch(0.98 0 0);         /* #ffffff - Emphasis */
+
+  /* ========================================
+   * SYNTAX HIGHLIGHTING COLORS
+   * Used as accent colors throughout UI
+   * ======================================== */
+  --syntax-string: oklch(0.72 0.15 145);      /* #6a9955 - Green (strings) */
+  --syntax-function: oklch(0.82 0.12 90);     /* #dcdcaa - Yellow (functions) */
+  --syntax-keyword: oklch(0.70 0.18 300);     /* #c586c0 - Purple (keywords) */
+  --syntax-variable: oklch(0.78 0.12 210);    /* #9cdcfe - Light blue (variables) */
+  --syntax-number: oklch(0.78 0.10 160);      /* #b5cea8 - Light green (numbers) */
+  --syntax-comment: oklch(0.55 0.08 145);     /* #6a9955 - Dim green (comments) */
+  --syntax-type: oklch(0.72 0.14 180);        /* #4ec9b0 - Teal (types) */
+  --syntax-operator: oklch(0.88 0 0);         /* #d4d4d4 - White (operators) */
+  --syntax-constant: oklch(0.75 0.12 55);     /* #d7ba7d - Orange (constants) */
+  --syntax-error: oklch(0.65 0.22 25);        /* #f44747 - Red (errors) */
+
+  /* ========================================
+   * NEON ACCENT COLORS
+   * For CTAs and interactive elements
+   * ======================================== */
+  --neon-primary: oklch(0.70 0.15 230);       /* #569cd6 - VS Code blue */
+  --neon-secondary: oklch(0.70 0.18 300);     /* #c586c0 - Purple */
+  --neon-success: oklch(0.72 0.15 145);       /* #6a9955 - Green */
+  --neon-warning: oklch(0.82 0.15 85);        /* #dcdcaa - Yellow */
+  --neon-glow: oklch(0.70 0.15 230 / 40%);    /* Blue glow effect */
+  --neon-glow-strong: oklch(0.70 0.15 230 / 60%);
+
+  /* ========================================
+   * WINDOW CHROME COLORS
+   * Traffic light buttons
+   * ======================================== */
+  --chrome-red: oklch(0.62 0.20 25);          /* Close button */
+  --chrome-yellow: oklch(0.78 0.15 85);       /* Minimize button */
+  --chrome-green: oklch(0.68 0.16 145);       /* Maximize button */
+
+  /* ========================================
+   * BORDER & DIVIDERS
+   * ======================================== */
+  --terminal-border-subtle: oklch(0.25 0 0);
+  --terminal-border-default: oklch(0.30 0 0);
+  --terminal-border-strong: oklch(0.40 0 0);
+  --terminal-border-focus: var(--neon-primary);
+
+  /* ========================================
+   * SHADOWS
+   * ======================================== */
+  --terminal-shadow-sm: 0 1px 2px oklch(0 0 0 / 20%);
+  --terminal-shadow-md: 0 4px 8px oklch(0 0 0 / 25%);
+  --terminal-shadow-lg: 0 8px 24px oklch(0 0 0 / 30%);
+  --terminal-shadow-glow: 0 0 20px var(--neon-glow);
+
+  /* ========================================
+   * SPACING
+   * ======================================== */
+  --terminal-radius-xs: 2px;
+  --terminal-radius-sm: 4px;
+  --terminal-radius-md: 6px;
+  --terminal-radius-lg: 8px;
+  --terminal-radius-xl: 12px;
+
+  /* ========================================
+   * TYPOGRAPHY
+   * ======================================== */
+  --font-mono: var(--font-geist-mono), 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  --font-sans: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+
+  --line-height-code: 1.6;
+  --line-height-prose: 1.8;
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-wide: 0.05em;
+
+  /* ========================================
+   * TRANSITIONS
+   * ======================================== */
+  --transition-fast: 0.1s ease;
+  --transition-normal: 0.2s ease;
+  --transition-slow: 0.3s ease;
+
+  /* ========================================
+   * Z-INDEX SCALE
+   * ======================================== */
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-modal: 300;
+  --z-tooltip: 400;
+}
+
+/* ========================================
+ * LIGHT THEME OVERRIDES
+ * Applied when not in dark mode
+ * ======================================== */
+:root:not(.dark) {
+  /* Background hierarchy - inverted for light mode */
+  --terminal-bg-deepest: oklch(0.99 0 0);     /* Near white */
+  --terminal-bg-deep: oklch(0.97 0 0);        /* Light gray */
+  --terminal-bg-medium: oklch(0.95 0 0);
+  --terminal-bg-elevated: oklch(0.93 0 0);
+  --terminal-bg-highlight: oklch(0.90 0 0);
+
+  /* Text hierarchy */
+  --terminal-text-primary: oklch(0.20 0 0);
+  --terminal-text-secondary: oklch(0.45 0 0);
+  --terminal-text-tertiary: oklch(0.60 0 0);
+  --terminal-text-accent: oklch(0.10 0 0);
+
+  /* Adjusted syntax colors for light mode - more saturated */
+  --syntax-string: oklch(0.45 0.18 145);
+  --syntax-function: oklch(0.50 0.15 55);
+  --syntax-keyword: oklch(0.50 0.22 300);
+  --syntax-variable: oklch(0.45 0.18 230);
+  --syntax-comment: oklch(0.50 0.10 145);
+  --syntax-type: oklch(0.45 0.16 180);
+  --syntax-constant: oklch(0.50 0.15 55);
+  --syntax-error: oklch(0.50 0.25 25);
+
+  /* Neon colors - #2E54A1 blue for light mode */
+  --neon-primary: #2E54A1;
+  --neon-glow: rgba(46, 84, 161, 0.25);
+  --neon-glow-strong: rgba(46, 84, 161, 0.40);
+
+  /* Borders */
+  --terminal-border-subtle: oklch(0.92 0 0);
+  --terminal-border-default: oklch(0.88 0 0);
+  --terminal-border-strong: oklch(0.80 0 0);
+
+  /* Shadows - lighter for light mode */
+  --terminal-shadow-sm: 0 1px 2px oklch(0 0 0 / 8%);
+  --terminal-shadow-md: 0 4px 8px oklch(0 0 0 / 10%);
+  --terminal-shadow-lg: 0 8px 24px oklch(0 0 0 / 12%);
+}

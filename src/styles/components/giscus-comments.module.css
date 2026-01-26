@@ -1,0 +1,97 @@
+/**
+ * Giscus Comments Component Styles
+ * Minimal wrapper for GitHub Discussions
+ */
+
+/* ========================================
+ * CONTAINER
+ * ======================================== */
+.commentsContainer {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+/* ========================================
+ * GISCUS WRAPPER
+ * ======================================== */
+.giscusWrapper {
+  min-height: 200px;
+}
+
+/* Loading state */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  gap: 1rem;
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+}
+
+.loadingSpinner {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ========================================
+ * GISCUS IFRAME OVERRIDES
+ * ======================================== */
+.giscusWrapper :global(.giscus) {
+  width: 100%;
+}
+
+.giscusWrapper :global(.giscus-frame) {
+  width: 100%;
+  border: none;
+}
+
+/* ========================================
+ * ERROR STATE
+ * ======================================== */
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 150px;
+  gap: 0.75rem;
+  padding: 2rem;
+  background: var(--muted);
+  border: 1px solid var(--destructive);
+  border-radius: 0.5rem;
+  text-align: center;
+}
+
+.error svg {
+  width: 2rem;
+  height: 2rem;
+  color: var(--destructive);
+}
+
+.errorText {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}
+
+/* ========================================
+ * RESPONSIVE
+ * ======================================== */
+@media (max-width: 768px) {
+  .commentsContainer {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+  }
+}

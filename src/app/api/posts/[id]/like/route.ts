@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
+import { db } from "@/lib/db"
 
 // POST /api/posts/[id]/like - 点赞/取消点赞文章
 export async function POST(
@@ -14,7 +14,7 @@ export async function POST(
     // const clientIp = forwarded ? forwarded.split(',')[0] : 'unknown'
     
     // 验证文章是否存在
-    const existingPost = await prisma.post.findUnique({
+    const existingPost = await db.post.findUnique({
       where: { id },
       select: { id: true, likes: true }
     })
@@ -28,7 +28,7 @@ export async function POST(
 
     // 简单的实现：每次请求都增加点赞数
     // 在实际应用中，你可能想要追踪用户的点赞状态
-    const updatedPost = await prisma.post.update({
+    const updatedPost = await db.post.update({
       where: { id },
       data: {
         likes: {

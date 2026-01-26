@@ -22,44 +22,43 @@ export const authOptions: NextAuthOptions = {
       }
       return session
     },
-    async jwt({ token, user, trigger }) {
-      // Initial sign in
+    async jwt({ token, user, trigger, account }) {
+      // Initial sign in - user object is available
       if (user) {
         token.role = user.role
-      }
-      
-      // Handle session update
-      if (trigger === "update") {
-        const updatedUser = await db.user.findUnique({
-          where: { id: token.sub! },
-          select: { role: true }
-        })
-        if (updatedUser) {
-          token.role = updatedUser.role
-        }
-      }
-      
-      return token
-    },
-    async signIn({ user, account }) {
-      if (!user.email) return false
-      
-      // Only update role after user record exists
-      if (account?.provider === 'google' && user.email === process.env.ADMIN_EMAIL) {
-        // Give some time for the user to be created by the adapter
-        setTimeout(async () => {
+
+        // Check if this is the admin email and assign admin role
+        if (account?.provider === 'google' && user.email === process.env.ADMIN_EMAIL) {
+          // Update user role in database (user should exist at this point)
           try {
             await db.user.update({
-              where: { email: user.email! },
+              where: { id: user.id },
               data: { role: Role.ADMIN }
             })
+            token.role = Role.ADMIN
             console.log('Admin role assigned to user:', user.email)
           } catch (error) {
             console.error('Failed to update user role:', error)
           }
-        }, 1000)
+        }
       }
-      
+
+      // Handle session update or refresh - always fetch latest role from DB
+      if (trigger === "update" || !token.role) {
+        const dbUser = await db.user.findUnique({
+          where: { id: token.sub! },
+          select: { role: true }
+        })
+        if (dbUser) {
+          token.role = dbUser.role
+        }
+      }
+
+      return token
+    },
+    async signIn({ user }) {
+      // Only allow sign in if user has email
+      if (!user.email) return false
       return true
     },
     async redirect({ url, baseUrl }) {

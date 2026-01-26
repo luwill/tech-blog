@@ -1,0 +1,200 @@
+/**
+ * Footer Component Styles
+ * Simplified terminal-style footer with social links
+ */
+
+.footer {
+  background: var(--terminal-bg-medium);
+  border-top: 1px solid var(--terminal-border-default);
+  font-family: var(--font-mono);
+  position: relative;
+}
+
+/* Main footer content */
+.footerContent {
+  padding: 16px 24px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.footerMain {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+/* Copyright */
+.copyright {
+  font-size: 0.8125rem;
+  color: var(--terminal-text-secondary);
+}
+
+/* Social links */
+.socialLinks {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.socialLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--terminal-bg-deep);
+  border: 1px solid var(--terminal-border-subtle);
+  border-radius: var(--terminal-radius-sm);
+  color: var(--terminal-text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+}
+
+.socialLink:hover {
+  border-color: #2E54A1;
+  color: #2E54A1;
+  box-shadow: 0 0 8px rgba(46, 84, 161, 0.25);
+}
+
+.icon {
+  width: 18px;
+  height: 18px;
+}
+
+.iconImage {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+/* QR Code Overlay */
+.qrOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.qrPopup {
+  position: relative;
+  padding: 24px;
+  background: var(--terminal-bg-medium);
+  border: 1px solid var(--terminal-border-default);
+  border-radius: var(--terminal-radius-lg);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  animation: slideUp 0.2s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.closeButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--terminal-text-tertiary);
+  font-size: 20px;
+  cursor: pointer;
+  border-radius: var(--terminal-radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.closeButton:hover {
+  background: var(--terminal-bg-deep);
+  color: var(--terminal-text-primary);
+}
+
+.qrImageWrapper {
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 16px;
+  padding: 8px;
+  background: #ffffff;
+  border-radius: var(--terminal-radius-md);
+  overflow: hidden;
+}
+
+.qrImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.qrName {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2E54A1;
+  margin-bottom: 4px;
+}
+
+.qrHint {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--terminal-text-tertiary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footerMain {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .socialLinks {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .footerContent {
+    padding: 12px 16px;
+  }
+
+  .copyright {
+    font-size: 0.75rem;
+  }
+
+  .socialLink {
+    width: 28px;
+    height: 28px;
+  }
+
+  .icon,
+  .iconImage {
+    width: 16px;
+    height: 16px;
+  }
+}
