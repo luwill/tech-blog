@@ -3,8 +3,24 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // Performance optimizations
   experimental: {
-    optimizePackageImports: ['@radix-ui/react-icons', 'lucide-react'],
+    optimizePackageImports: [
+      '@radix-ui/react-icons',
+      'lucide-react',
+      '@radix-ui/react-alert-dialog',
+      '@radix-ui/react-checkbox',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-dropdown-menu',
+      '@radix-ui/react-label',
+      '@radix-ui/react-select',
+      '@radix-ui/react-slot',
+      '@radix-ui/react-tabs',
+      '@radix-ui/react-toast',
+      'date-fns',
+    ],
   },
+
+  // Reduce memory usage during build
+  swcMinify: true,
   
   // Output configuration
   output: 'standalone',
@@ -100,9 +116,9 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: false,
   },
   
-  // ESLint during builds
+  // ESLint during builds - disabled to reduce memory usage on Vercel
   eslint: {
-    ignoreDuringBuilds: false,
+    ignoreDuringBuilds: true,
   },
 };
 

@@ -1,11 +1,11 @@
+/* External font - must be first */
+@import url('https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.7.0/style.css');
+
 @import "tailwindcss";
 @import "tw-animate-css";
 
 /* KaTeX CSS for math rendering */
 @import "katex/dist/katex.css";
-
-/* LXGW WenKai Lite - Chinese optimized font for better reading */
-@import url('https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.7.0/style.css');
 
 /* Terminal/IDE Theme Styles */
 @import "../styles/globals/_variables.css";
