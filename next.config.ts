@@ -1,10 +1,18 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Minimal experimental features to reduce memory usage
+  // Experimental features for bundle optimization
   experimental: {
-    // Only optimize the most commonly used packages
-    optimizePackageImports: ['lucide-react'],
+    // Tree-shake these packages to reduce bundle size
+    optimizePackageImports: [
+      'lucide-react',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-dropdown-menu',
+      '@radix-ui/react-alert-dialog',
+      '@radix-ui/react-select',
+      '@radix-ui/react-tabs',
+      'sonner',
+    ],
   },
 
   // Image optimization

@@ -9,8 +9,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ImageUpload } from "@/components/ui/image-upload"
 import { X, Plus, Save, Eye, Edit3, Image as ImageIcon, Clock, CheckCircle2 } from "lucide-react"
-import remarkMath from 'remark-math'
-import rehypeKatex from 'rehype-katex'
 
 // Dynamically import the markdown editor to avoid SSR issues
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
@@ -284,10 +282,6 @@ export function MarkdownEditor({
                 }
               }}
               height={500}
-              previewOptions={{
-                remarkPlugins: [remarkMath],
-                rehypePlugins: [rehypeKatex],
-              }}
             />
           </div>
         </div>

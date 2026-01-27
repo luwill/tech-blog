@@ -21,10 +21,8 @@ import { GiscusComments } from '@/components/blog/GiscusComments'
 import { ScrollToTop } from '@/components/ui/ScrollToTop'
 import styles from '@/styles/pages/blog-post.module.css'
 import contentStyles from '@/styles/components/blog-content.module.css'
-import remarkGfm from 'remark-gfm'
-import remarkMath from 'remark-math'
-import rehypeKatex from 'rehype-katex'
-import rehypeHighlight from 'rehype-highlight'
+// KaTeX CSS only imported here where math rendering is needed
+import 'katex/dist/katex.css'
 
 /**
  * Sanitize content by removing unwanted tags like <think> from AI-generated content
@@ -245,8 +243,6 @@ export default function BlogPostClient({ slug }: { slug: string }) {
                     style={{
                       backgroundColor: 'transparent',
                     }}
-                    remarkPlugins={[remarkGfm, remarkMath]}
-                    rehypePlugins={[rehypeKatex, rehypeHighlight]}
                   />
                 </article>
 

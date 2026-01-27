@@ -4,9 +4,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* KaTeX CSS for math rendering */
-@import "katex/dist/katex.css";
-
 /* Terminal/IDE Theme Styles */
 @import "../styles/globals/_variables.css";
 @import "../styles/globals/_typography.css";
