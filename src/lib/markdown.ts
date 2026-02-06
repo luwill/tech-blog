@@ -1,11 +1,3 @@
-import { remark } from 'remark'
-import remarkGfm from 'remark-gfm'
-import remarkMath from 'remark-math'
-import rehypeKatex from 'rehype-katex'
-import rehypeHighlight from 'rehype-highlight'
-import rehypeStringify from 'rehype-stringify'
-import remarkRehype from 'remark-rehype'
-
 // Calculate estimated reading time
 export function calculateReadingTime(content: string): number {
   const wordsPerMinute = 200
@@ -20,20 +12,6 @@ export function generateSlug(title: string): string {
     .replace(/[^\w\s-]/g, '') // Remove special characters
     .replace(/[\s_-]+/g, '-') // Replace spaces and underscores with hyphens
     .replace(/^-+|-+$/g, '') // Remove leading/trailing hyphens
-}
-
-// Process markdown content
-export async function processMarkdown(markdown: string): Promise<string> {
-  const processed = await remark()
-    .use(remarkGfm)
-    .use(remarkMath)
-    .use(remarkRehype)
-    .use(rehypeKatex)
-    .use(rehypeHighlight)
-    .use(rehypeStringify)
-    .process(markdown)
-
-  return processed.toString()
 }
 
 // Extract excerpt from markdown content

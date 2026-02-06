@@ -103,3 +103,13 @@ export const ERROR_CODES = {
 } as const
 
 export type ErrorCode = typeof ERROR_CODES[keyof typeof ERROR_CODES]
+
+/**
+ * User roles - mirrors Prisma Role enum.
+ * Use this in "use client" components instead of importing from @prisma/client,
+ * which would bundle the entire Prisma package (~120MB) into the browser bundle.
+ */
+export const ROLE = {
+  ADMIN: "ADMIN",
+  USER: "USER",
+} as const

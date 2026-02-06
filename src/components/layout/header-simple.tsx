@@ -6,7 +6,7 @@ import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { LocaleToggle } from "@/components/ui/locale-toggle"
 import { useLocale } from "@/components/providers/locale-provider"
 import { useSession } from "next-auth/react"
-import { Role } from "@prisma/client"
+import { ROLE } from "@/lib/constants"
 import { Terminal } from "lucide-react"
 import styles from "@/styles/components/header.module.css"
 
@@ -54,7 +54,7 @@ export function HeaderSimple() {
           <ThemeToggle />
 
           {/* Admin button - only visible for logged-in admins */}
-          {session?.user?.role === Role.ADMIN && (
+          {session?.user?.role === ROLE.ADMIN && (
             <Link href="/admin" className={styles.adminButton}>
               {t.admin}
             </Link>

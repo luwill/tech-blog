@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Settings, LogOut, Edit } from "lucide-react"
-import { Role } from "@prisma/client"
+import { ROLE } from "@/lib/constants"
 
 export function Header() {
   const { data: session, status, update } = useSession()
@@ -101,7 +101,7 @@ export function Header() {
                 </div>
                 <DropdownMenuSeparator />
                 
-                {session.user.role === Role.ADMIN && (
+                {session.user.role === ROLE.ADMIN && (
                   <>
                     <DropdownMenuItem asChild>
                       <Link href="/admin">

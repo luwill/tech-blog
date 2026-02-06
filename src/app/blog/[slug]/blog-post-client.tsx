@@ -21,8 +21,6 @@ import { GiscusComments } from '@/components/blog/GiscusComments'
 import { ScrollToTop } from '@/components/ui/ScrollToTop'
 import styles from '@/styles/pages/blog-post.module.css'
 import contentStyles from '@/styles/components/blog-content.module.css'
-// KaTeX CSS only imported here where math rendering is needed
-import 'katex/dist/katex.css'
 
 /**
  * Sanitize content by removing unwanted tags like <think> from AI-generated content
