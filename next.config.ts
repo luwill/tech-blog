@@ -13,19 +13,13 @@ const nextConfig: NextConfig = {
       '@radix-ui/react-tabs',
       'sonner',
     ],
-    // Keep heavy server-only packages out of client bundle analysis
-    serverComponentsExternalPackages: ['@prisma/client', 'prisma'],
   },
+
+  // Keep heavy server-only packages out of client bundle analysis
+  serverExternalPackages: ['@prisma/client', 'prisma'],
 
   // Disable source maps in production to reduce memory during build
   productionBrowserSourceMaps: false,
-
-  // Limit webpack workers to reduce memory pressure
-  webpack: (config, { isServer }) => {
-    // Reduce parallelism to lower peak memory usage
-    config.parallelism = 10;
-    return config;
-  },
 
   // Image optimization
   images: {
