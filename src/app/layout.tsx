@@ -22,8 +22,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "LouWill's Tech Blog",
-    template: "%s | LouWill's Tech Blog"
+    default: "LouWill",
+    template: "%s | LouWill"
   },
   description: "AI Algorithm Engineer sharing insights on technology, AI algorithms, and product reviews. Deep dives into machine learning, web development, and industry insights.",
   authors: [{ name: "LouWill", url: "https://www.louwill.com" }],
