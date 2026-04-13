@@ -1,81 +1,45 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## Project
 
-## Project Overview
+louwill 的个人技术博客。Next.js 15 + React 19 + TypeScript + Prisma + PostgreSQL，部署在 Vercel。
 
-This is a personal tech blog system for louwill (AI Algorithm Engineer / AI Full Stack Developer), featuring:
-- Personal homepage with professional profile
-- AI technology articles and product reviews
-- Advanced Markdown editor with real-time preview
-- Theme switching (light/dark mode)
-- Access analytics and visitor statistics
-- User management system (admin vs visitors)
-
-## Development Commands
+## Commands
 
 ```bash
-# Development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Start production server
-npm start
-
-# Run linting
-npm run lint
-
-# Run type checking
-npm run type-check
+npm run dev              # 开发服务器
+npm run build            # 生产构建
+npm run lint             # ESLint 检查
+npm run type-check       # TypeScript 类型检查
+npm run db:push          # 同步 Prisma schema 到数据库
+npm run db:generate      # 生成 Prisma Client
+npm run db:studio        # 打开 Prisma Studio
 ```
 
-## Tech Stack
+## Architecture
 
-- **Frontend**: Next.js 14, React 18, TypeScript
-- **Styling**: Tailwind CSS, Shadcn/ui components
-- **Database**: Prisma ORM with PlanetScale/Supabase
-- **Authentication**: NextAuth.js
-- **Editor**: @uiw/react-md-editor with enhanced features
-- **Theme**: next-themes for light/dark mode
-- **Analytics**: Custom analytics + Vercel Analytics
-- **Deployment**: Vercel
+- `src/app/` — App Router 页面和 API 路由
+- `src/app/api/` — REST API (posts, categories, search, analytics, upload, auth)
+- `src/components/` — React 组件 (ui/, blog/, editor/, admin/, layout/, providers/)
+- `src/services/` — 业务逻辑层 (post, category, tag)
+- `src/lib/` — 工具函数 (auth, db, seo, markdown, validations/, error-handler, env)
+- `prisma/schema.prisma` — 数据模型: User, Post, Category, Tag, PageView, OnlineUser, SiteStats
 
-## Project Architecture
+## Key Patterns
 
-```
-src/
-├── app/                 # Next.js App Router
-│   ├── (auth)/         # Authentication pages
-│   ├── admin/          # Admin dashboard
-│   ├── blog/           # Blog pages
-│   ├── api/            # API routes
-│   └── globals.css     # Global styles
-├── components/         # React components
-│   ├── ui/            # Shadcn UI components
-│   ├── blog/          # Blog-specific components
-│   ├── editor/        # Markdown editor
-│   └── layout/        # Layout components
-├── lib/               # Utilities and configs
-├── types/             # TypeScript definitions
-└── styles/            # Additional styles
-```
+- **认证**: NextAuth.js + Google OAuth, JWT session, ADMIN/VISITOR 角色, `ADMIN_EMAIL` 环境变量自动授权
+- **API 验证**: Zod schemas in `src/lib/validations/`, 统一错误处理 via `ApiError` + `handleApiError()`
+- **API 响应**: 标准信封格式, HTTP Cache-Control headers on GET endpoints
+- **数据库**: Prisma singleton (`src/lib/db.ts`), server-only external package
+- **样式**: Tailwind CSS v4 + CSS Modules, next-themes 主题切换
+- **SEO**: JSON-LD 结构化数据 (`src/lib/seo.ts`), 动态 sitemap, robots.txt
+- **编辑器**: @uiw/react-md-editor, 动态导入避免 SSR 问题
+- **文件上传**: magic byte 验证 + 速率限制, 存储于 `/public/uploads/`
+- **环境变量**: `src/lib/env.ts` 启动时验证, 类型安全导出
 
-## My Profile
+## Notes
 
-- Nickname: louwill
-- Occupation: Algorithm Engineer / AI Full Stack Developer
-- Github: https://github.com/luwill
-- Domain: https://www.louwill.com/
-- Email: ygnjd2016@gmail.com
-
-## Key Features to Implement
-
-1. **Content Management**: Create, edit, publish articles
-2. **Markdown Editor**: Real-time preview, code highlighting, math formulas
-3. **Theme System**: Light/dark mode switching
-4. **Analytics**: Page views, visitor stats (admin only)
-5. **User System**: Admin authentication and permissions
-6. **SEO Optimization**: Meta tags, sitemaps, performance
-7. **Responsive Design**: Mobile-first approach
+- 构建时跳过 TypeScript/ESLint 错误检查 (内存优化, 见 `next.config.ts`)
+- Vercel 构建使用 Turbopack + 16GB 内存限制
+- Admin 路由保护在 `src/middleware.ts`
+- 评论系统使用 Giscus (GitHub Discussions)

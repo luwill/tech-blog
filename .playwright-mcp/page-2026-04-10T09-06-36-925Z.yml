@@ -1,0 +1,426 @@
+- generic [active] [ref=e1]:
+  - banner:
+    - generic [ref=e2]:
+      - link "跳至主要内容":
+        - /url: "#main"
+      - generic [ref=e4]:
+        - link "OpenAI 主页" [ref=e5] [cursor=pointer]:
+          - /url: /zh-Hans-CN/
+          - img [ref=e7]
+        - generic [ref=e14]:
+          - generic [ref=e16]:
+            - button "打开搜索" [ref=e18] [cursor=pointer]:
+              - img [ref=e19]
+            - button "关闭搜索" [ref=e21] [cursor=pointer]:
+              - img [ref=e22]
+          - generic [ref=e24]:
+            - generic [ref=e25]:
+              - button "登录" [ref=e26] [cursor=pointer]:
+                - text: 登录
+                - img [ref=e27]
+              - link "试用 ChatGPT （在新窗口中打开）" [ref=e29] [cursor=pointer]:
+                - /url: https://chatgpt.com/?openaicom-did=b6dca839-8c71-45d3-82a2-8d90851e63b0&openaicom_referred=true
+                - text: 试用 ChatGPT
+                - img [ref=e30]
+                - generic [ref=e32]: （在新窗口中打开）
+            - button "打开移动端导航菜单" [ref=e33] [cursor=pointer]:
+              - img [ref=e34]
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - list:
+                - listitem:
+                  - button: 研究
+                - listitem:
+                  - button: 产品
+                - listitem:
+                  - button: 企业
+                - listitem:
+                  - button: 开发人员
+                - listitem:
+                  - button: 公司
+                - listitem:
+                  - link:
+                    - /url: https://openaifoundation.org
+                    - text: 基金会
+                    - img
+                    - generic: （在新窗口中打开）
+  - generic [ref=e36]:
+    - main [ref=e37]:
+      - generic [ref=e38]: Codex | OpenAI 打造的 AI 编码助手 | OpenAI
+      - generic [ref=e39]:
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic: 你的浏览器不支持视频标记。
+        - generic [ref=e44]:
+          - button "asdfadsf" [ref=e45] [cursor=pointer]
+          - heading "Codex" [level=1] [ref=e47]
+          - paragraph [ref=e49]: 助力构建并交付产品的 AI 编程智能体 — 由 ChatGPT 提供技术支持。
+          - link "下载适用于 macOS 的版本" [ref=e55] [cursor=pointer]:
+            - /url: https://persistent.oaistatic.com/codex-app-prod/Codex.dmg
+        - img "Codex 界面展示了一个包含任务列表（如“创建 Codex 主视觉”、“实现深色模式”）的工作空间侧边栏。主面板显示了“为 Codex 应用创建上线主视觉”的提示、文件读取与编辑等进度更新，以及一个标题为“向 Codex 提问”的输入框，当前模型为 GPT-5.3-Codex。" [ref=e61]
+        - group "Cisco logo, Instacart logo, Duolingo logo, Vanta logo, Virgin Atlantic logo, Miro logo, Rakuten logo, Whoop logo" [ref=e66]
+        - generic [ref=e136]:
+          - paragraph [ref=e139]: 团队开始使用 Codex，即可获得最高 500 美元的使用额度。
+          - link "领取优惠 （在新窗口中打开）" [ref=e140] [cursor=pointer]:
+            - /url: https://chatgpt.com/codex/team/start?openaicom-did=b6dca839-8c71-45d3-82a2-8d90851e63b0&openaicom_referred=true
+            - text: 领取优惠
+            - img [ref=e141]
+            - generic [ref=e143]: （在新窗口中打开）
+        - generic [ref=e146]:
+          - heading "使用智能体进行构建的最佳方式" [level=2] [ref=e150]
+          - generic [ref=e152]:
+            - generic [ref=e154]:
+              - heading "为实际工程任务的核心需求而打造" [level=3] [ref=e155]
+              - paragraph [ref=e156]: 从常规的 Pull Request 到最具挑战的核心难题，Codex 都能为你提供端到端的任务支持。依托 OpenAI 的前沿编码大模型，Codex 能够胜任功能开发、复杂重构及代码迁移等多项任务。
+            - img "左侧导航面板列出了工作空间与项目（包括 Codex、ChatGPT 及 Sora），并展示了“上手引导优化”和“实现深色模式”等当前任务。" [ref=e164]
+          - generic [ref=e166]:
+            - generic [ref=e168]:
+              - heading "专为多智能体工作流而设计" [level=3] [ref=e169]
+              - paragraph [ref=e170]: Codex 应用是进行智能体式编码的指挥中心。借助内置的工作树与云端环境，智能体能够在多个项目间并行工作，将原需数周的开发周期缩短至数天。
+            - img "新的技能创建弹窗提供从线程使用 Codex 创建技能，或上传技能文件的选项，并在下方展示其他推荐的技能。" [ref=e178]
+          - generic [ref=e180]:
+            - generic [ref=e182]:
+              - heading "适应贵团队的构建方式" [level=3] [ref=e183]
+              - paragraph [ref=e184]: 借助技能功能，Codex 不再只是写代码，而是能直接参与将 Pull Request 变成产品的实际工作，例如代码理解、原型构建、文档编写等，并与团队标准保持一致。
+            - img "界面展示了一个 Codex 技能工作流：用户请求使用 $openai-image 风格技能将网站素材转化为云朵。面板显示逐步的状态信息（如“思考了 3 秒”、“正在使用技能”），并生成了一张预览图，画面是一只由云朵构成、置于蓝天背景之上的狗。" [ref=e192]
+          - generic [ref=e194]:
+            - generic [ref=e196]:
+              - heading "为长时间后台工作而设计" [level=3] [ref=e197]
+              - paragraph [ref=e198]: 借助自动化功能，Codex 能在无需提示的情况下自动运行，处理诸如问题分流、告警监控、CI/CD 等关键日常工作，让你能够专注于真正的开发工作。
+            - img "提交对话框展示待处理的更改摘要、分支名称、变更文件数量以及新增与删除行，并提供用于填写变更说明的输入框，以及用于提交或创建 Pull Request 的按钮" [ref=e206]
+          - generic [ref=e208]:
+            - generic [ref=e210]:
+              - heading "全面提升团队的质量标准" [level=3] [ref=e211]
+              - paragraph [ref=e212]: Codex 通过严谨的设计、全面的测试与高质量的代码审查提升整体工程水准，从源头化解风险，确保团队稳健交付。
+            - img "确认面板显示所有更改已应用到本地工作空间，包括工作空间名称、分支信息、变更文件（含新增与删除行），以及一个用于在本地继续操作的主要操作按钮。" [ref=e220]
+        - generic [ref=e223]:
+          - generic [ref=e226]:
+            - heading "在各个构建场景中使用同一智能体" [level=2] [ref=e227]
+            - paragraph [ref=e229]: 在多个界面和环境中使用 Codex，并通过你的 ChatGPT 帐户实现统一连接。
+            - link "详情请参阅开发者文档 （在新窗口中打开）" [ref=e232] [cursor=pointer]:
+              - /url: https://developers.openai.com/codex/
+              - text: 详情请参阅开发者文档
+              - img [ref=e233]
+              - generic [ref=e235]: （在新窗口中打开）
+          - generic [ref=e238]:
+            - generic [ref=e239]:
+              - img "一个应用风格的编码界面，标题为“开始编码”，设置为天气应用。提示内容为“在通知 API 中加入指数退避机制”，展示了一位开发者使用 Codex 请求对后端进行特定改进。" [ref=e245]
+              - generic [ref=e246]:
+                - heading "在 Codex 应用中开始" [level=3] [ref=e248]
+                - link "下载适用于 macOS 的版本" [ref=e253] [cursor=pointer]:
+                  - /url: https://persistent.oaistatic.com/codex-app-prod/Codex.dmg
+            - generic [ref=e254]:
+              - img "代码审查界面展示了在实现深色模式后产生的最新变更。两个文件被修改，包含新增与删除的代码行。界面中还出现了一条审查意见：“看起来很好，补上测试吧”，体现了在开发流程中进行协作式审查与迭代。" [ref=e260]
+              - generic [ref=e261]:
+                - heading "前往编辑器" [level=3] [ref=e263]
+                - button "在你的 IDE 中试用" [ref=e269] [cursor=pointer]:
+                  - img [ref=e270]
+                  - text: 在你的 IDE 中试用
+            - generic [ref=e272]:
+              - img "一个终端风格的界面，显示 OpenAI Codex（v0.91.0），模型设置为“gpt-5.2-codex medium”。界面中出现提示语“嗨 Codex，实现深色模式”，表示开发者正在通过命令行请求 Codex 实现深色模式。" [ref=e278]
+              - generic [ref=e279]:
+                - heading "在终端中继续操作" [level=3] [ref=e281]
+                - button "$ npm i -g @openai/codex" [ref=e286] [cursor=pointer]:
+                  - generic [ref=e287]: $ npm i -g @openai/codex
+                  - img [ref=e288]
+        - generic [ref=e292]:
+          - generic [ref=e294]:
+            - heading "What builders are saying" [level=2] [ref=e298]
+            - group "客户评价" [ref=e299]:
+              - generic [ref=e300]:
+                - generic [ref=e301]:
+                  - img "Codex app > Layout > Testimonials > daniel-sikorskiy 1" [ref=e305]
+                  - paragraph [ref=e306]: “At Wonderful, Codex CLI has completely replaced every other agentic harness for our core technology and architecture work requiring deep reasoning and understanding.”
+                - paragraph [ref=e307]: Daniel Sikorskiy, Chief Architect, Wonderful
+              - generic [ref=e308]:
+                - generic [ref=e309]:
+                  - img "Codex app > Layout > Testimonials > joey wang" [ref=e313]
+                  - paragraph [ref=e314]: “At Harvey, Codex transformed how we build by cutting early iteration time by 30–50%, freeing engineers to focus on system design and high-leverage decisions.”
+                - paragraph [ref=e315]: Joey Wang, Mobile Lead, Harvey
+              - generic [ref=e316]:
+                - generic [ref=e317]:
+                  - img "Codex app > Layout > Testimonials > tess-rosania 1" [ref=e321]
+                  - paragraph [ref=e322]: “With Codex, we ship in a weekend what previously took a quarter. It’s become our go-to for projects we wouldn’t have otherwise been able to take on.”
+                - paragraph [ref=e323]: Tess Rosania, Software Engineer, Sierra
+              - generic [ref=e324]:
+                - generic [ref=e325]:
+                  - img "Codex app > Layout > Testimonials > austin-ray 1" [ref=e329]
+                  - paragraph [ref=e330]: “The recent Codex releases have been a step change. Codex PR reviews catch bugs our team would have missed, and we ship with more confidence because of it. Now we’re pulling the CLI and desktop app into more of our workflows—each release raises the bar.”
+                - paragraph [ref=e331]: Austin Ray, AI Dev X Team Lead, Ramp
+              - generic [ref=e332]:
+                - generic [ref=e333]:
+                  - img "Codex app > Layout > Testimonials > dan-shipper 1" [ref=e337]
+                  - paragraph [ref=e338]: “Codex performed best in our backend Python code-review benchmark. It was the only one to catch tricky backward compatibility issues and consistently found the hard bugs that other bots missed.”
+                - paragraph [ref=e339]: Aaron Wang, Senior Software Engineer, Duolingo
+              - generic [ref=e340]:
+                - generic [ref=e341]:
+                  - img "Codex app > Layout > Testimonials > tres-wong-godfrey 1" [ref=e345]
+                  - paragraph [ref=e346]: “I needed to update another team’s codebase for a release. Codex handled the refactor and test generation, delivering fully tested code I handed back fast—keeping the feature on schedule without added risk.”
+                - paragraph [ref=e347]: Tres Wong-Godfrey, Tech Lead, Cisco Meraki
+          - generic [ref=e349]:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic: 你的浏览器不支持视频标记。
+            - generic [ref=e350]:
+              - heading "立即试用 Codex" [level=2] [ref=e351]
+              - generic [ref=e352]: 助力构建并交付产品的 AI 编程智能体 — 由 ChatGPT 提供技术支持。
+              - link "下载适用于 macOS 的版本" [ref=e358] [cursor=pointer]:
+                - /url: https://persistent.oaistatic.com/codex-app-prod/Codex.dmg
+    - contentinfo [ref=e359]:
+      - generic [ref=e361]:
+        - generic [ref=e362]:
+          - generic [ref=e363]:
+            - heading "我们的研究" [level=2] [ref=e364]
+            - list [ref=e365]:
+              - listitem [ref=e366]:
+                - link "研究索引" [ref=e367] [cursor=pointer]:
+                  - /url: /zh-Hans-CN/research/index/
+              - listitem [ref=e368]:
+                - link "研究概览" [ref=e369] [cursor=pointer]:
+                  - /url: /zh-Hans-CN/research/
+              - listitem [ref=e370]:
+                - link "研究驻留" [ref=e371] [cursor=pointer]:
+                  - /url: /zh-Hans-CN/residency/
+              - listitem [ref=e372]:
+                - link "OpenAI for Science" [ref=e373] [cursor=pointer]:
+                  - /url: /zh-Hans-CN/science/
+              - listitem [ref=e374]:
+                - link "经济研究" [ref=e375] [cursor=pointer]:
+                  - /url: /zh-Hans-CN/signals/
+          - generic [ref=e376]:
+            - heading "最新进展" [level=2] [ref=e377]
+            - list [ref=e378]:
+              - listitem [ref=e379]:
+                - link "GPT-5.3 Instant" [ref=e380] [cursor=pointer]:
+                  - /url: /zh-Hans-CN/index/gpt-5-3-instant/
+              - listitem [ref=e381]:
+                - link "GPT-5.3-Codex" [ref=e382] [cursor=pointer]:
+                  - /url: /zh-Hans-CN/index/introducing-gpt-5-3-codex/
+              - listitem [ref=e383]:
+                - link "GPT-5" [ref=e384] [cursor=pointer]:
+                  - /url: /zh-Hans-CN/gpt-5/
+              - listitem [ref=e385]:
+                - link "Codex" [ref=e386] [cursor=pointer]:
+                  - /url: /zh-Hans-CN/index/introducing-gpt-5-3-codex/
+          - generic [ref=e387]:
+            - heading "安全" [level=2] [ref=e388]
+            - list [ref=e389]:
+              - listitem [ref=e390]:
+                - link "安全措施" [ref=e391] [cursor=pointer]:
+                  - /url: /zh-Hans-CN/safety/
+              - listitem [ref=e392]:
+                - link "安全与隐私" [ref=e393] [cursor=pointer]:
+                  - /url: /zh-Hans-CN/security-and-privacy/
+              - listitem [ref=e394]:
+                - link "信任与透明度" [ref=e395] [cursor=pointer]:
+                  - /url: /zh-Hans-CN/trust-and-transparency/
+        - generic [ref=e396]:
+          - generic [ref=e397]:
+            - heading "ChatGPT" [level=2] [ref=e398]
+            - list [ref=e399]:
+              - listitem [ref=e400]:
+                - link "探索 ChatGPT （在新窗口中打开）" [ref=e401] [cursor=pointer]:
+                  - /url: https://chatgpt.com/zh-Hans-CN/overview?openaicom-did=b6dca839-8c71-45d3-82a2-8d90851e63b0&openaicom_referred=true
+                  - text: 探索 ChatGPT
+                  - img [ref=e402]
+                  - generic [ref=e404]: （在新窗口中打开）
+              - listitem [ref=e405]:
+                - link "Business 版" [ref=e406] [cursor=pointer]:
+                  - /url: https://chatgpt.com/zh-Hans-CN/business/business-plan?openaicom-did=b6dca839-8c71-45d3-82a2-8d90851e63b0&openaicom_referred=true
+              - listitem [ref=e407]:
+                - link "Enterprise 版" [ref=e408] [cursor=pointer]:
+                  - /url: https://chatgpt.com/zh-Hans-CN/business/enterprise?openaicom-did=b6dca839-8c71-45d3-82a2-8d90851e63b0&openaicom_referred=true
+              - listitem [ref=e409]:
+                - link "Education 版" [ref=e410] [cursor=pointer]:
+                  - /url: https://chatgpt.com/zh-Hans-CN/business/education?openaicom-did=b6dca839-8c71-45d3-82a2-8d90851e63b0&openaicom_referred=true
+              - listitem [ref=e411]:
+                - link "定价 （在新窗口中打开）" [ref=e412] [cursor=pointer]:
+                  - /url: https://chatgpt.com/zh-Hans-CN/pricing?openaicom-did=b6dca839-8c71-45d3-82a2-8d90851e63b0&openaicom_referred=true
+                  - text: 定价
+                  - img [ref=e413]
+                  - generic [ref=e415]: （在新窗口中打开）
+              - listitem [ref=e416]:
+                - link "下载 （在新窗口中打开）" [ref=e417] [cursor=pointer]:
+                  - /url: https://chatgpt.com/zh-Hans-CN/download?openaicom-did=b6dca839-8c71-45d3-82a2-8d90851e63b0&openaicom_referred=true
+                  - text: 下载
+                  - img [ref=e418]
+                  - generic [ref=e420]: （在新窗口中打开）
+          - generic [ref=e421]:
+            - heading "Sora" [level=2] [ref=e422]
+            - list [ref=e423]:
+              - listitem [ref=e424]:
+                - link "Sora 概览" [ref=e425] [cursor=pointer]:
+                  - /url: /zh-Hans-CN/sora/
+              - listitem [ref=e426]:
+                - link "功能" [ref=e427] [cursor=pointer]:
+                  - /url: /sora/#features
+              - listitem [ref=e428]:
+                - link "定价" [ref=e429] [cursor=pointer]:
+                  - /url: /sora/#pricing
+              - listitem [ref=e430]:
+                - link "Sora 登录 （在新窗口中打开）" [ref=e431] [cursor=pointer]:
+                  - /url: https://sora.com/
+                  - text: Sora 登录
+                  - img [ref=e432]
+                  - generic [ref=e434]: （在新窗口中打开）
+          - generic [ref=e435]:
+            - heading "API 平台" [level=2] [ref=e436]
+            - list [ref=e437]:
+              - listitem [ref=e438]:
+                - link "平台概览" [ref=e439] [cursor=pointer]:
+                  - /url: /zh-Hans-CN/api/
+              - listitem [ref=e440]:
+                - link "定价" [ref=e441] [cursor=pointer]:
+                  - /url: /zh-Hans-CN/api/pricing/
+              - listitem [ref=e442]:
+                - link "API 登录 （在新窗口中打开）" [ref=e443] [cursor=pointer]:
+                  - /url: https://platform.openai.com/login
+                  - text: API 登录
+                  - img [ref=e444]
+                  - generic [ref=e446]: （在新窗口中打开）
+              - listitem [ref=e447]:
+                - link "文档 （在新窗口中打开）" [ref=e448] [cursor=pointer]:
+                  - /url: https://developers.openai.com/api/docs
+                  - text: 文档
+                  - img [ref=e449]
+                  - generic [ref=e451]: （在新窗口中打开）
+              - listitem [ref=e452]:
+                - link "开发者论坛 （在新窗口中打开）" [ref=e453] [cursor=pointer]:
+                  - /url: https://community.openai.com/
+                  - text: 开发者论坛
+                  - img [ref=e454]
+                  - generic [ref=e456]: （在新窗口中打开）
+        - generic [ref=e457]:
+          - generic [ref=e458]:
+            - heading "商业应用" [level=2] [ref=e459]
+            - list [ref=e460]:
+              - listitem [ref=e461]:
+                - link "商业应用概览" [ref=e462] [cursor=pointer]:
+                  - /url: /zh-Hans-CN/business/
+              - listitem [ref=e463]:
+                - link "解决方案" [ref=e464] [cursor=pointer]:
+                  - /url: /zh-Hans-CN/solutions/
+              - listitem [ref=e465]:
+                - link "联系销售团队" [ref=e466] [cursor=pointer]:
+                  - /url: /zh-Hans-CN/contact-sales/
+          - generic [ref=e467]:
+            - heading "公司" [level=2] [ref=e468]
+            - list [ref=e469]:
+              - listitem [ref=e470]:
+                - link "关于我们" [ref=e471] [cursor=pointer]:
+                  - /url: /zh-Hans-CN/about/
+              - listitem [ref=e472]:
+                - link "我们的宪章" [ref=e473] [cursor=pointer]:
+                  - /url: /zh-Hans-CN/charter/
+              - listitem [ref=e474]:
+                - link "基金会 （在新窗口中打开）" [ref=e475] [cursor=pointer]:
+                  - /url: https://openaifoundation.org
+                  - text: 基金会
+                  - img [ref=e476]
+                  - generic [ref=e478]: （在新窗口中打开）
+              - listitem [ref=e479]:
+                - link "工作机会" [ref=e480] [cursor=pointer]:
+                  - /url: /zh-Hans-CN/careers/
+              - listitem [ref=e481]:
+                - link "品牌" [ref=e482] [cursor=pointer]:
+                  - /url: /zh-Hans-CN/brand/
+          - generic [ref=e483]:
+            - heading "支持" [level=2] [ref=e484]
+            - list [ref=e485]:
+              - listitem [ref=e486]:
+                - link "帮助中心 （在新窗口中打开）" [ref=e487] [cursor=pointer]:
+                  - /url: https://help.openai.com/
+                  - text: 帮助中心
+                  - img [ref=e488]
+                  - generic [ref=e490]: （在新窗口中打开）
+          - generic [ref=e491]:
+            - heading "更多" [level=2] [ref=e492]
+            - list [ref=e493]:
+              - listitem [ref=e494]:
+                - link "新闻" [ref=e495] [cursor=pointer]:
+                  - /url: /zh-Hans-CN/news/
+              - listitem [ref=e496]:
+                - link "客户案例" [ref=e497] [cursor=pointer]:
+                  - /url: /zh-Hans-CN/stories/
+              - listitem [ref=e498]:
+                - link "直播" [ref=e499] [cursor=pointer]:
+                  - /url: /zh-Hans-CN/live/
+              - listitem [ref=e500]:
+                - link "播客" [ref=e501] [cursor=pointer]:
+                  - /url: /zh-Hans-CN/podcast/
+              - listitem [ref=e502]:
+                - link "RSS" [ref=e503] [cursor=pointer]:
+                  - /url: /news/rss.xml
+        - generic [ref=e505]:
+          - heading "条款与政策" [level=2] [ref=e506]
+          - list [ref=e507]:
+            - listitem [ref=e508]:
+              - link "使用条款" [ref=e509] [cursor=pointer]:
+                - /url: /zh-Hans-CN/policies/terms-of-use/
+            - listitem [ref=e510]:
+              - link "隐私政策" [ref=e511] [cursor=pointer]:
+                - /url: /zh-Hans-CN/policies/privacy-policy/
+            - listitem [ref=e512]:
+              - link "其他政策" [ref=e513] [cursor=pointer]:
+                - /url: /zh-Hans-CN/policies/
+      - generic [ref=e514]:
+        - generic [ref=e515]:
+          - link "X" [ref=e516] [cursor=pointer]:
+            - /url: https://x.com/OpenAI
+            - img [ref=e517]
+            - generic [ref=e519]: （在新窗口中打开）
+          - link "YouTube" [ref=e520] [cursor=pointer]:
+            - /url: https://www.youtube.com/OpenAI
+            - img [ref=e521]
+            - generic [ref=e523]: （在新窗口中打开）
+          - link "LinkedIn" [ref=e524] [cursor=pointer]:
+            - /url: https://www.linkedin.com/company/openai
+            - img [ref=e525]
+            - generic [ref=e527]: （在新窗口中打开）
+          - link "GitHub" [ref=e528] [cursor=pointer]:
+            - /url: https://github.com/openai
+            - img [ref=e529]
+            - generic [ref=e531]: （在新窗口中打开）
+          - link "Instagram" [ref=e532] [cursor=pointer]:
+            - /url: https://www.instagram.com/openai/
+            - img [ref=e533]
+            - generic [ref=e535]: （在新窗口中打开）
+          - link "TikTok" [ref=e536] [cursor=pointer]:
+            - /url: https://www.tiktok.com/@openai
+            - img [ref=e537]
+            - generic [ref=e539]: （在新窗口中打开）
+          - link "Discord" [ref=e540] [cursor=pointer]:
+            - /url: https://discord.gg/openai
+            - img [ref=e541]
+            - generic [ref=e543]: （在新窗口中打开）
+        - generic [ref=e544]:
+          - generic [ref=e545]: OpenAI © 2015–2026
+          - button "管理 Cookie" [ref=e546] [cursor=pointer]
+        - generic [ref=e547]:
+          - button "更改语言" [ref=e548] [cursor=pointer]:
+            - generic [ref=e549]:
+              - img [ref=e550]
+              - generic [ref=e553]:
+                - text: 中文
+                - generic [ref=e554]: 中国
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - img
+                    - textbox "按名称或地区搜索区域设置":
+                      - /placeholder: 搜索
+  - alert [ref=e555]

@@ -46,6 +46,12 @@ export function HeaderSimple() {
           >
             {t.blog}
           </Link>
+          <Link
+            href="/course"
+            className={`${styles.navLink} ${isActive('/course') ? styles.active : ''}`}
+          >
+            {t.course}
+          </Link>
         </nav>
 
         {/* Right actions */}

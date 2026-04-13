@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/footer"
 import { useLocale } from "@/components/providers/locale-provider"
 import { TerminalWindow } from "@/components/terminal"
 import { ArrowRight } from "lucide-react"
+import { AsciiFluidOverlay } from "@/components/ascii-fluid"
 import styles from "@/styles/pages/home.module.css"
 
 export default function Home() {
@@ -14,6 +15,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <AsciiFluidOverlay />
       <HeaderSimple />
 
       <main className="flex-1">

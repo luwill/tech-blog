@@ -9,6 +9,7 @@ export interface Translations {
   // Common
   home: string
   blog: string
+  course: string
   about: string
   search: string
   signIn: string
@@ -100,6 +101,15 @@ export interface Translations {
   english: string
   chinese: string
   
+  // Course Page
+  courseTitle: string
+  courseSubtitle: string
+  courseDescription: string
+  courseModules: string
+  courseTopics: string
+  courseExpandAll: string
+  courseCollapseAll: string
+
   // Theme
   theme: string
   light: string
@@ -112,6 +122,7 @@ export const translations: Record<Locale, Translations> = {
     // Common
     home: 'Home',
     blog: 'Blog',
+    course: 'Course',
     about: 'About',
     search: 'Search',
     signIn: 'Sign In',
@@ -203,6 +214,15 @@ export const translations: Record<Locale, Translations> = {
     english: 'English',
     chinese: '中文',
     
+    // Course Page
+    courseTitle: 'Claude Code in Practice',
+    courseSubtitle: 'Master AI-powered programming with Claude Code',
+    courseDescription: 'A comprehensive 8-module course covering Claude Code from basics to advanced Vibe Coding workflows.',
+    courseModules: 'modules',
+    courseTopics: 'topics',
+    courseExpandAll: 'Expand All',
+    courseCollapseAll: 'Collapse All',
+
     // Theme
     theme: 'Theme',
     light: 'Light',
@@ -213,6 +233,7 @@ export const translations: Record<Locale, Translations> = {
     // Common
     home: '首页',
     blog: '博客',
+    course: '课程',
     about: '关于',
     search: '搜索',
     signIn: '登录',
@@ -304,6 +325,15 @@ export const translations: Record<Locale, Translations> = {
     english: 'English',
     chinese: '中文',
     
+    // Course Page
+    courseTitle: 'Claude Code实战',
+    courseSubtitle: '掌握Claude Code驱动的AI编程工作流',
+    courseDescription: '涵盖8大模块，从基础入门到进阶实战，全面掌握Claude Code。',
+    courseModules: '个模块',
+    courseTopics: '个主题',
+    courseExpandAll: '全部展开',
+    courseCollapseAll: '全部收起',
+
     // Theme
     theme: '主题',
     light: '浅色',

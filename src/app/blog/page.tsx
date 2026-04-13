@@ -16,6 +16,7 @@ import {
   Terminal
 } from 'lucide-react'
 import { getContentPreview } from '@/lib/utils'
+import { AsciiFluidOverlay } from '@/components/ascii-fluid'
 import styles from '@/styles/pages/blog-list.module.css'
 
 interface Post {
@@ -138,6 +139,7 @@ export default function BlogPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <AsciiFluidOverlay />
       <HeaderSimple />
 
       <main className="flex-1">
