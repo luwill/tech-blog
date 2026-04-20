@@ -38,7 +38,7 @@ export default function CoursePage() {
   }, [allExpanded])
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen isolate">
       <AsciiFluidOverlay />
       <HeaderSimple />
 

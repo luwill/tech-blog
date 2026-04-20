@@ -14,7 +14,7 @@ export default function Home() {
   const { t } = useLocale()
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen isolate">
       <AsciiFluidOverlay />
       <HeaderSimple />
 

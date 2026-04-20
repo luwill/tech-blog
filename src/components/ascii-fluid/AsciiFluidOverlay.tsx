@@ -97,7 +97,11 @@ export function AsciiFluidOverlay(props: AsciiFluidProps) {
     // Read font from CSS variable or fallback
     const computedStyle = getComputedStyle(document.documentElement)
     const font = computedStyle.getPropertyValue('--font-mono').trim() || DEFAULT_FONT
-    const color = charColor || computedStyle.getPropertyValue('--terminal-text-primary').trim() || '#d4d4d4'
+    const color =
+      charColor ||
+      computedStyle.getPropertyValue('--ascii-fluid-color').trim() ||
+      computedStyle.getPropertyValue('--terminal-text-primary').trim() ||
+      '#d4d4d4'
 
     // Create noise source
     const noise = createSimplexNoise(42)
@@ -257,7 +261,11 @@ export function AsciiFluidOverlay(props: AsciiFluidProps) {
     // ---------- Theme Observer ----------
     const themeObserver = new MutationObserver(() => {
       const cs = getComputedStyle(document.documentElement)
-      const newColor = charColor || cs.getPropertyValue('--terminal-text-primary').trim() || '#d4d4d4'
+      const newColor =
+        charColor ||
+        cs.getPropertyValue('--ascii-fluid-color').trim() ||
+        cs.getPropertyValue('--terminal-text-primary').trim() ||
+        '#d4d4d4'
       atlas = createGlyphAtlas(renderConfig.charset, renderConfig.fontSize, font, newColor, state.dpr)
       state.atlas = atlas
     })

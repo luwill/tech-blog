@@ -23,6 +23,9 @@
   --terminal-text-tertiary: oklch(0.55 0 0);       /* #6e6e6e - Very muted */
   --terminal-text-accent: oklch(0.98 0 0);         /* #ffffff - Emphasis */
 
+  /* ASCII fluid background effect — tuned per theme for max visibility */
+  --ascii-fluid-color: oklch(1 0 0);               /* Pure white on dark bg */
+
   /* ========================================
    * SYNTAX HIGHLIGHTING COLORS
    * Used as accent colors throughout UI
@@ -126,6 +129,9 @@
   --terminal-text-secondary: oklch(0.45 0 0);
   --terminal-text-tertiary: oklch(0.60 0 0);
   --terminal-text-accent: oklch(0.10 0 0);
+
+  /* ASCII fluid background effect — near-black for crisp light-mode contrast */
+  --ascii-fluid-color: oklch(0.15 0 0);
 
   /* Adjusted syntax colors for light mode - more saturated */
   --syntax-string: oklch(0.45 0.18 145);
