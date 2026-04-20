@@ -10,7 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// User model for authentication
+// User model — kept minimal for CLI author resolution
 model User {
   id            String   @id @default(cuid())
   email         String   @unique
@@ -19,54 +19,10 @@ model User {
   image         String?
   role          Role     @default(VISITOR)
   posts         Post[]
-  sessions      Session[]
-  accounts      Account[]
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
   @@map("users")
-}
-
-// NextAuth Account model
-model Account {
-  id                String  @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String?
-  access_token      String?
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String?
-  session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-  @@map("accounts")
-}
-
-// NextAuth Session model
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("sessions")
-}
-
-// NextAuth VerificationToken model
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
-  @@map("verificationtokens")
 }
 
 // Blog post model
@@ -173,7 +129,7 @@ model SiteStats {
   @@map("site_stats")
 }
 
-// User roles enum
+// User roles enum — retained so CLI's resolveAuthor can filter role: 'ADMIN'
 enum Role {
   ADMIN
   VISITOR

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { Suspense, useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { HeaderSimple } from '@/components/layout/header-simple'
@@ -52,6 +52,14 @@ interface Category {
 }
 
 export default function BlogPage() {
+  return (
+    <Suspense fallback={null}>
+      <BlogPageContent />
+    </Suspense>
+  )
+}
+
+function BlogPageContent() {
   const { t } = useLocale()
   const router = useRouter()
   const searchParams = useSearchParams()

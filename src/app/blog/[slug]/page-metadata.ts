@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         ...post.tags.map((tag) => tag.name),
         post.category?.name,
         'AI', 'Technology', 'Blog', 'LouWill'
-      ].filter(Boolean)
+      ].filter((k): k is string => Boolean(k))
     })
   } catch (error) {
     console.error('Error generating metadata:', error)

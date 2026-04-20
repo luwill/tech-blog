@@ -5,15 +5,12 @@ import { usePathname } from "next/navigation"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { LocaleToggle } from "@/components/ui/locale-toggle"
 import { useLocale } from "@/components/providers/locale-provider"
-import { useSession } from "next-auth/react"
-import { ROLE } from "@/lib/constants"
 import { Terminal } from "lucide-react"
 import styles from "@/styles/components/header.module.css"
 
 export function HeaderSimple() {
   const pathname = usePathname()
   const { t } = useLocale()
-  const { data: session } = useSession()
 
   const isActive = (path: string) => {
     if (path === '/') return pathname === '/'
@@ -58,13 +55,6 @@ export function HeaderSimple() {
         <div className={styles.actions}>
           <LocaleToggle />
           <ThemeToggle />
-
-          {/* Admin button - only visible for logged-in admins */}
-          {session?.user?.role === ROLE.ADMIN && (
-            <Link href="/admin" className={styles.adminButton}>
-              {t.admin}
-            </Link>
-          )}
         </div>
       </div>
     </header>
