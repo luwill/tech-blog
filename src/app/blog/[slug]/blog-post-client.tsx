@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 import Link from 'next/link'
-import dynamic from 'next/dynamic'
+import MarkdownPreview from '@uiw/react-markdown-preview'
+import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
 import { HeaderSimple } from '@/components/layout/header-simple'
 import { Footer } from '@/components/layout/footer'
 import { Button } from '@/components/ui/button'
@@ -11,8 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import {
   Calendar,
-  Clock,
-  ArrowLeft
+  Clock
 } from 'lucide-react'
 import { trackPageView } from '@/lib/analytics'
 import { generateArticleStructuredData, generateBreadcrumbStructuredData } from '@/lib/seo'
@@ -41,82 +40,61 @@ function sanitizeContent(content: string): string {
   return sanitized.trim()
 }
 
-// Dynamically import MDViewer to avoid SSR issues
-const MDEditor = dynamic(() => import("@uiw/react-md-editor").then((mod) => mod.default.Markdown), {
-  ssr: false,
-  loading: () => <div className="h-96 bg-muted animate-pulse rounded-md" />
-})
+// XSS 防护 schema：在 GitHub 默认白名单基础上，
+// 保留语法高亮的 class（span/code/pre）并关闭 id 前缀改写（否则 TOC 锚点会失效）
+const markdownSanitizeSchema = {
+  ...defaultSchema,
+  clobberPrefix: '',
+  attributes: {
+    ...defaultSchema.attributes,
+    span: [...(defaultSchema.attributes?.span ?? []), 'className'],
+    code: [...(defaultSchema.attributes?.code ?? []), 'className'],
+    pre: [...(defaultSchema.attributes?.pre ?? []), 'className'],
+  },
+}
 
-interface Post {
+export interface Post {
   id: string
   title: string
   slug: string
-  excerpt: string
+  excerpt: string | null
   content: string
   published: boolean
   featured: boolean
   views: number
   likes: number
-  readTime: number
+  readTime: number | null
   createdAt: string
   updatedAt: string
   category?: {
     id: string
     name: string
     slug: string
-  }
+  } | null
   tags: Array<{
     id: string
     name: string
     slug: string
   }>
   author: {
-    name: string
+    name: string | null
     email: string
   }
 }
 
-export default function BlogPostClient({ slug }: { slug: string }) {
-  const router = useRouter()
-  const [post, setPost] = useState<Post | null>(null)
-  const [relatedPosts, setRelatedPosts] = useState<Post[]>([])
-  const [loading, setLoading] = useState(true)
+interface BlogPostClientProps {
+  post: Post
+  relatedPosts: Post[]
+}
 
+export default function BlogPostClient({ post, relatedPosts }: BlogPostClientProps) {
   useEffect(() => {
-    if (!slug) return
-
-    const loadPost = async () => {
-      try {
-        const response = await fetch(`/api/posts/slug/${slug}`)
-        
-        if (response.ok) {
-          const data = await response.json()
-          setPost(data.post)
-          
-          // Track page view
-          trackPageView(`/blog/${slug}`, data.post.title)
-          
-          // Load related posts
-          if (data.post.category) {
-            const relatedResponse = await fetch(`/api/posts?category=${data.post.category.slug}&limit=3&exclude=${data.post.id}`)
-            if (relatedResponse.ok) {
-              const relatedData = await relatedResponse.json()
-              setRelatedPosts(relatedData.posts || [])
-            }
-          }
-        } else if (response.status === 404) {
-          router.push('/404')
-        }
-      } catch (error) {
-        console.error('Error loading post:', error)
-        router.push('/404')
-      } finally {
-        setLoading(false)
-      }
-    }
-    
-    loadPost()
-  }, [slug, router])
+    // 埋点 + 浏览量上报（写操作已从文章 GET 路径剥离到独立端点）
+    trackPageView(`/blog/${post.slug}`, post.title)
+    fetch(`/api/posts/slug/${post.slug}/view`, { method: 'POST' }).catch(() => {
+      // 上报失败不影响阅读
+    })
+  }, [post.slug, post.title])
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -126,54 +104,10 @@ export default function BlogPostClient({ slug }: { slug: string }) {
     })
   }
 
-  if (loading) {
-    return (
-      <div className={styles.loadingContainer}>
-        <HeaderSimple />
-        <main className={styles.loadingContent}>
-          <div className="animate-pulse">
-            <div className={`${styles.skeleton} h-8 w-3/4 mb-4`}></div>
-            <div className={`${styles.skeleton} h-4 w-1/2 mb-8`}></div>
-            <div className={`${styles.skeleton} h-96 mb-8`}></div>
-            <div className="space-y-3">
-              {[...Array(8)].map((_, i) => (
-                <div key={i} className={`${styles.skeleton} h-4 w-full`}></div>
-              ))}
-            </div>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    )
-  }
-
-  if (!post) {
-    return (
-      <div className="flex flex-col min-h-screen">
-        <HeaderSimple />
-        <main className="flex-1 container mx-auto px-4 py-8">
-          <div className="text-center py-16">
-            <h1 className="text-2xl font-bold mb-4">Post not found</h1>
-            <p className="text-muted-foreground mb-8">
-              The article you&apos;re looking for doesn&apos;t exist or has been removed.
-            </p>
-            <Button asChild>
-              <Link href="/blog">
-                <ArrowLeft className="h-4 w-4 mr-2" aria-hidden="true" />
-                Back to Blog
-              </Link>
-            </Button>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    )
-  }
-
   // Generate structured data
   const articleStructuredData = generateArticleStructuredData({
     title: post.title,
-    description: post.excerpt,
+    description: post.excerpt || '',
     content: post.content,
     publishedAt: post.createdAt,
     updatedAt: post.updatedAt,
@@ -181,7 +115,7 @@ export default function BlogPostClient({ slug }: { slug: string }) {
     author: post.author.name || 'LouWill',
     category: post.category?.name,
     tags: post.tags.map(tag => tag.name),
-    readTime: post.readTime
+    readTime: post.readTime || undefined
   })
 
   const breadcrumbStructuredData = generateBreadcrumbStructuredData([
@@ -236,8 +170,9 @@ export default function BlogPostClient({ slug }: { slug: string }) {
               <div className={styles.mainContent}>
                 {/* Article Body */}
                 <article className={`${styles.articleBody} ${contentStyles.articleContent} prose prose-lg max-w-none dark:prose-invert`}>
-                  <MDEditor
+                  <MarkdownPreview
                     source={sanitizeContent(post.content)}
+                    rehypePlugins={[[rehypeSanitize, markdownSanitizeSchema]]}
                     style={{
                       backgroundColor: 'transparent',
                     }}

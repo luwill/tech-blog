@@ -1,31 +1,12 @@
 import { generateSEO } from '@/lib/seo'
-import { db } from '@/lib/db'
+import { getPublishedPost } from '@/lib/posts'
 
-// Generate metadata for SEO using direct database access
+// Generate metadata for SEO — 与页面共享 getPublishedPost 的 React cache，避免重复查询
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
 
   try {
-    // Direct database query instead of HTTP fetch to avoid timeout
-    const post = await db.post.findUnique({
-      where: { slug, published: true },
-      select: {
-        title: true,
-        slug: true,
-        excerpt: true,
-        createdAt: true,
-        updatedAt: true,
-        author: {
-          select: { name: true }
-        },
-        category: {
-          select: { name: true }
-        },
-        tags: {
-          select: { name: true }
-        }
-      }
-    })
+    const post = await getPublishedPost(slug)
 
     if (!post) {
       return generateSEO({
@@ -38,6 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       title: post.title,
       description: post.excerpt || '',
       url: `/blog/${post.slug}`,
+      image: `/og?title=${encodeURIComponent(post.title)}`,
       type: 'article',
       publishedTime: post.createdAt.toISOString(),
       modifiedTime: post.updatedAt.toISOString(),

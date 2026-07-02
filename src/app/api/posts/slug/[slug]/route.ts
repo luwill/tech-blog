@@ -45,22 +45,10 @@ export async function GET(
       )
     }
 
-    // 增加浏览量
-    await db.post.update({
-      where: { slug },
-      data: {
-        views: {
-          increment: 1
-        }
-      }
-    })
-
-    return NextResponse.json({ 
-      success: true, 
-      post: {
-        ...post,
-        views: post.views + 1 // 返回更新后的浏览量
-      }
+    // 浏览量自增已剥离到 POST /api/posts/slug/[slug]/view，读接口保持幂等
+    return NextResponse.json({
+      success: true,
+      post
     })
   } catch (error) {
     console.error("Error fetching post by slug:", error)
