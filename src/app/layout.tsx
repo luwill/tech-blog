@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { LocaleProvider } from "@/components/providers/locale-provider";
-import { Toaster } from "@/components/ui/sonner";
 import { AnalyticsTracker } from "@/components/analytics/analytics-tracker";
 import { generateWebsiteStructuredData } from "@/lib/seo";
 import "./globals.css";
@@ -92,7 +91,6 @@ export default function RootLayout({
           <LocaleProvider>
             <AnalyticsTracker />
             {children}
-            <Toaster />
           </LocaleProvider>
         </ThemeProvider>
       </body>

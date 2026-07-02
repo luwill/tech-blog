@@ -18,26 +18,6 @@ export class ApiError extends Error {
 }
 
 /**
- * Authentication error - user not logged in
- */
-export class AuthenticationError extends ApiError {
-  constructor(message: string = "Authentication required") {
-    super(message, HTTP_STATUS.UNAUTHORIZED, ERROR_CODES.UNAUTHORIZED)
-    this.name = "AuthenticationError"
-  }
-}
-
-/**
- * Authorization error - user lacks permission
- */
-export class AuthorizationError extends ApiError {
-  constructor(message: string = "Admin access required") {
-    super(message, HTTP_STATUS.FORBIDDEN, ERROR_CODES.FORBIDDEN)
-    this.name = "AuthorizationError"
-  }
-}
-
-/**
  * Not found error - resource doesn't exist
  */
 export class NotFoundError extends ApiError {
@@ -143,22 +123,6 @@ export function handleApiError(error: unknown) {
 
   // Handle standard errors with pattern matching (backward compatibility)
   if (error instanceof Error) {
-    // Authentication errors
-    if (error.message.includes("User not authenticated")) {
-      return NextResponse.json(
-        { success: false, error: "Authentication required", code: ERROR_CODES.UNAUTHORIZED },
-        { status: HTTP_STATUS.UNAUTHORIZED }
-      )
-    }
-
-    // Authorization errors
-    if (error.message.includes("Admin access required")) {
-      return NextResponse.json(
-        { success: false, error: "Admin access required", code: ERROR_CODES.FORBIDDEN },
-        { status: HTTP_STATUS.FORBIDDEN }
-      )
-    }
-
     // Database constraint errors
     if (error.message.includes("Unique constraint failed")) {
       return NextResponse.json(
@@ -183,22 +147,4 @@ export function handleApiError(error: unknown) {
     { success: false, error: "Internal server error", code: ERROR_CODES.INTERNAL_ERROR },
     { status: HTTP_STATUS.INTERNAL_SERVER_ERROR }
   )
-}
-
-/**
- * Handle authentication page errors
- */
-export function handleAuthError(error: string): string {
-  switch (error) {
-    case "access-denied":
-      return "Access denied. You don't have permission to view this page."
-    case "session-required":
-      return "Please sign in to continue."
-    case "admin-required":
-      return "Admin access required."
-    case "OAuthAccountNotLinked":
-      return "This email is already linked to another account."
-    default:
-      return "An authentication error occurred."
-  }
 }

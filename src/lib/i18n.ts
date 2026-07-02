@@ -12,9 +12,6 @@ export interface Translations {
   course: string
   about: string
   search: string
-  signIn: string
-  signOut: string
-  admin: string
   
   // Homepage
   heroTitle: string
@@ -125,9 +122,6 @@ export const translations: Record<Locale, Translations> = {
     course: 'Course',
     about: 'About',
     search: 'Search',
-    signIn: 'Sign In',
-    signOut: 'Sign Out',
-    admin: 'Admin',
     
     // Homepage
     heroTitle: "Hello, I'm LouWill",
@@ -236,9 +230,6 @@ export const translations: Record<Locale, Translations> = {
     course: '课程',
     about: '关于',
     search: '搜索',
-    signIn: '登录',
-    signOut: '退出',
-    admin: '管理',
     
     // Homepage
     heroTitle: '你好，我是LouWill',

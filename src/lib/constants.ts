@@ -11,19 +11,6 @@ export const CONFIG = {
     DEFAULT_PAGE: 1,
   },
 
-  // File upload settings
-  UPLOAD: {
-    MAX_FILE_SIZE: 5 * 1024 * 1024, // 5MB in bytes
-    ALLOWED_IMAGE_TYPES: [
-      'image/jpeg',
-      'image/jpg',
-      'image/png',
-      'image/gif',
-      'image/webp',
-    ] as const,
-    UPLOAD_DIR: 'public/uploads',
-  },
-
   // Content settings
   CONTENT: {
     READING_SPEED_WPM: 200, // Words per minute for reading time calculation
@@ -36,9 +23,7 @@ export const CONFIG = {
   TIME: {
     ONLINE_USER_WINDOW: 5 * 60 * 1000, // 5 minutes
     ONLINE_USER_CLEANUP: 60 * 60 * 1000, // 1 hour
-    AUTO_SAVE_INTERVAL: 30 * 1000, // 30 seconds
     ONLINE_STATUS_UPDATE: 60 * 1000, // 60 seconds
-    SESSION_MAX_AGE: 30 * 24 * 60 * 60, // 30 days in seconds
   },
 
   // API settings
@@ -103,13 +88,3 @@ export const ERROR_CODES = {
 } as const
 
 export type ErrorCode = typeof ERROR_CODES[keyof typeof ERROR_CODES]
-
-/**
- * User roles - mirrors Prisma Role enum.
- * Use this in "use client" components instead of importing from @prisma/client,
- * which would bundle the entire Prisma package (~120MB) into the browser bundle.
- */
-export const ROLE = {
-  ADMIN: "ADMIN",
-  USER: "USER",
-} as const
