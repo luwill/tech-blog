@@ -19,7 +19,7 @@ const DEFAULT_SEO = {
   description: "AI Algorithm Engineer & Full Stack Developer sharing insights on artificial intelligence, machine learning, and cutting-edge technology trends.",
   keywords: ["AI", "Machine Learning", "Deep Learning", "Algorithm", "Technology", "Blog", "LouWill"],
   url: process.env.NEXT_PUBLIC_BASE_URL || 'https://www.louwill.com',
-  image: '/og-image.jpg',
+  image: '/og', // 动态生成的默认分享图（src/app/og/route.tsx）
   type: 'website' as const
 }
 

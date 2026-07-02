@@ -24,28 +24,33 @@ export async function GET(request: NextRequest) {
     }
 
     // Text search across title, excerpt, and content
+    // mode: 'insensitive' — Postgres 的 contains 默认区分大小写
     if (query) {
       whereClause.OR = [
         {
           title: {
-            contains: query
+            contains: query,
+            mode: 'insensitive'
           }
         },
         {
           excerpt: {
-            contains: query
+            contains: query,
+            mode: 'insensitive'
           }
         },
         {
           content: {
-            contains: query
+            contains: query,
+            mode: 'insensitive'
           }
         },
         {
           tags: {
             some: {
               name: {
-                contains: query
+                contains: query,
+                mode: 'insensitive'
               }
             }
           }

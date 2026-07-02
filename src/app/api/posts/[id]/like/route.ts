@@ -1,18 +1,22 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
+import { likeLimiter, checkRateLimit, getClientIp } from "@/lib/rate-limit"
 
-// POST /api/posts/[id]/like - 点赞/取消点赞文章
+// POST /api/posts/[id]/like - 点赞文章
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params
-    
-    // Get client IP for tracking likes (for future use)
-    // const forwarded = request.headers.get('x-forwarded-for')
-    // const clientIp = forwarded ? forwarded.split(',')[0] : 'unknown'
-    
+
+    if (!(await checkRateLimit(likeLimiter, getClientIp(request)))) {
+      return NextResponse.json(
+        { error: "Too many requests" },
+        { status: 429 }
+      )
+    }
+
     // 验证文章是否存在
     const existingPost = await db.post.findUnique({
       where: { id },

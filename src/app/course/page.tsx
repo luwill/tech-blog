@@ -74,7 +74,7 @@ export default function CoursePage() {
               <span className={styles.heroString}>&quot;{t.courseSubtitle}&quot;</span>
             </div>
             <div className={styles.heroLine}>
-              <span className={styles.heroComment}>// {t.courseDescription}</span>
+              <span className={styles.heroComment}>{`// ${t.courseDescription}`}</span>
             </div>
           </div>
 

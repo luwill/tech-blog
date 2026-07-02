@@ -1,14 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { handleApiError } from '@/lib/error-handler'
+import { analyticsLimiter, checkRateLimit, getClientIp } from '@/lib/rate-limit'
 
 // Track page view
 export async function POST(request: NextRequest) {
   try {
-    const { path, title, userAgent } = await request.json()
+    const ip = getClientIp(request)
 
-    const forwarded = request.headers.get('x-forwarded-for')
-    const ip = forwarded ? forwarded.split(',')[0] : 'unknown'
+    if (!(await checkRateLimit(analyticsLimiter, ip))) {
+      return NextResponse.json(
+        { success: false, error: 'Too many requests' },
+        { status: 429 }
+      )
+    }
+
+    const { path, title, userAgent } = await request.json()
 
     const isBot = /bot|crawler|spider/i.test(userAgent || '')
 

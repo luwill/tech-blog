@@ -114,15 +114,15 @@ export function AsciiFluidOverlay(props: AsciiFluidProps) {
     canvas.width = rect.width * dpr
     canvas.height = rect.height * dpr
 
-    let grid = computeGrid(canvas.width, canvas.height, atlas.cellWidth, atlas.cellHeight)
+    const grid = computeGrid(canvas.width, canvas.height, atlas.cellWidth, atlas.cellHeight)
 
     // Create fluid state
     const fluidW = Math.max(3, Math.floor(grid.cols * fluidConfig.resolutionScale))
     const fluidH = Math.max(3, Math.floor(grid.rows * fluidConfig.resolutionScale))
-    let fluidState = createFluidState(fluidW, fluidH)
+    const fluidState = createFluidState(fluidW, fluidH)
 
     // Luminance buffers
-    let smoothedLuma = new Float32Array(grid.cols * grid.rows)
+    const smoothedLuma = new Float32Array(grid.cols * grid.rows)
 
     // Initialize mutable state
     const state: MutableState = {

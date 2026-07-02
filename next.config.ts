@@ -6,12 +6,8 @@ const nextConfig: NextConfig = {
     // Tree-shake these packages to reduce bundle size
     optimizePackageImports: [
       'lucide-react',
-      '@radix-ui/react-dialog',
       '@radix-ui/react-dropdown-menu',
-      '@radix-ui/react-alert-dialog',
       '@radix-ui/react-select',
-      '@radix-ui/react-tabs',
-      'sonner',
     ],
   },
 
@@ -49,26 +45,15 @@ const nextConfig: NextConfig = {
     ];
   },
 
-  // Redirects
-  async redirects() {
-    return [
-      {
-        source: '/dashboard',
-        destination: '/admin',
-        permanent: true,
-      },
-    ];
-  },
-
   // Disable x-powered-by header
   poweredByHeader: false,
 
-  // Skip type checking and linting during build to save memory
+  // 构建期恢复类型/lint 检查（Turbopack + 大内存下可承受；再 OOM 时优先调内存而非跳过检查）
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
 };
 
