@@ -3,13 +3,17 @@ import { Redis } from '@upstash/redis'
 
 /**
  * 基于 Upstash Redis 的分布式限流（serverless 多实例下共享状态）。
- * 未配置 UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN 时优雅降级为放行，
- * 便于本地开发；生产环境务必在 Vercel 配置这两个环境变量。
+ * 兼容两套环境变量命名：
+ * - Vercel Marketplace 集成自动注入的 KV_REST_API_URL / KV_REST_API_TOKEN
+ * - Upstash 原生的 UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN
+ * 两者都未配置时优雅降级为放行（本地开发友好）。
  */
-const redis =
-  process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN
-    ? Redis.fromEnv()
-    : null
+const redisUrl = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL
+const redisToken = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN
+
+const redis = redisUrl && redisToken
+  ? new Redis({ url: redisUrl, token: redisToken })
+  : null
 
 function createLimiter(requests: number, prefix: string): Ratelimit | null {
   if (!redis) return null
