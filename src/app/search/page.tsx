@@ -276,23 +276,27 @@ function SearchPageContent() {
                       </div>
                       <CardTitle className="group-hover:text-primary transition-colors line-clamp-2">
                         <Link href={`/blog/${post.slug}`}>
-                          <span 
-                            dangerouslySetInnerHTML={{ 
-                              __html: results.filters.query 
-                                ? highlightSearchTerm(post.title, results.filters.query)
-                                : post.title
-                            }} 
-                          />
+                          {results.filters.query ? (
+                            <span
+                              dangerouslySetInnerHTML={{
+                                __html: highlightSearchTerm(post.title, results.filters.query)
+                              }}
+                            />
+                          ) : (
+                            post.title
+                          )}
                         </Link>
                       </CardTitle>
                       <CardDescription className="line-clamp-2">
-                        <span 
-                          dangerouslySetInnerHTML={{ 
-                            __html: results.filters.query 
-                              ? highlightSearchTerm(post.excerpt, results.filters.query)
-                              : post.excerpt
-                          }} 
-                        />
+                        {results.filters.query ? (
+                          <span
+                            dangerouslySetInnerHTML={{
+                              __html: highlightSearchTerm(post.excerpt, results.filters.query)
+                            }}
+                          />
+                        ) : (
+                          post.excerpt
+                        )}
                       </CardDescription>
                     </CardHeader>
                     <CardContent>

@@ -10,7 +10,10 @@ export async function GET(
     const { id } = await params
 
     const post = await db.post.findUnique({
-      where: { id },
+      where: {
+        id,
+        published: true // 只返回已发布的文章
+      },
       include: {
         author: {
           select: {

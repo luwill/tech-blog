@@ -73,11 +73,26 @@ export async function searchPosts(params: SearchParams): Promise<SearchResult | 
   }
 }
 
+export function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+// 输出经过 HTML 转义，可安全用于 dangerouslySetInnerHTML；
+// 搜索词先做同样的转义，保证能匹配到转义后的文本
 export function highlightSearchTerm(text: string, searchTerm: string): string {
-  if (!searchTerm || !text) return text
-  
-  const regex = new RegExp(`(${searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
-  return text.replace(regex, '<mark class="bg-yellow-200 dark:bg-yellow-800">$1</mark>')
+  if (!text) return ''
+
+  const escapedText = escapeHtml(text)
+  if (!searchTerm) return escapedText
+
+  const escapedTerm = escapeHtml(searchTerm).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const regex = new RegExp(`(${escapedTerm})`, 'gi')
+  return escapedText.replace(regex, '<mark class="bg-yellow-200 dark:bg-yellow-800">$1</mark>')
 }
 
 export function generateSearchSuggestions(query: string): string[] {

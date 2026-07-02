@@ -6,17 +6,15 @@ import { handleApiError } from "@/lib/error-handler"
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const page = parseInt(searchParams.get("page") || "1")
-    const limit = parseInt(searchParams.get("limit") || "10")
+    const pageParam = parseInt(searchParams.get("page") || "1", 10)
+    const limitParam = parseInt(searchParams.get("limit") || "10", 10)
+    const page = Number.isNaN(pageParam) ? 1 : Math.max(pageParam, 1)
+    const limit = Number.isNaN(limitParam) ? 10 : Math.min(Math.max(limitParam, 1), 50)
     const category = searchParams.get("category")
     const tag = searchParams.get("tag")
-    const published = searchParams.get("published")
 
-    const where: Record<string, unknown> = {}
-
-    if (published !== "false") {
-      where.published = true
-    }
+    // 公开 API 只返回已发布文章，草稿仅可通过 CLI 直连数据库访问
+    const where: Record<string, unknown> = { published: true }
 
     if (category) {
       where.category = {
