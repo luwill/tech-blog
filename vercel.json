@@ -106,19 +106,5 @@
         }
       ]
     }
-  ],
-  "redirects": [
-    {
-      "source": "/admin/(.*)",
-      "has": [
-        {
-          "type": "header",
-          "key": "x-forwarded-proto",
-          "value": "http"
-        }
-      ],
-      "destination": "https://www.louwill.com/admin/$1",
-      "permanent": true
-    }
   ]
 }
