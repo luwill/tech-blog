@@ -70,6 +70,82 @@
 - [ ] 图片上传方案（Vercel Blob）：后续事项
 - [ ] （可选）点赞去重；`OnlineUser` 表长期堆积需清理任务（可用 Vercel Cron）
 
+---
+
+# 第二期：技术博客 → 个人 IP 站（2026-09-27 立项）
+
+> 定位：课程为主要转化目标，同时承载个人 IP；受众以国内为主。
+> 依据：2026-09-14 项目评审 + 2026-09-27 需求确认。每个 Stage 开工前先给方案要点等确认（CLAUDE.md §8.5）。
+
+## 已知事实（决定方案的输入）
+
+- 线上现状：已发布 3 篇，分类表为空；课程页有 40 个小节，但**没有任何报名/购买入口**；公众号二维码藏在 footer 的弹窗里
+- 公众号 vault：`/Users/louwill/Documents/wechat-article/AI编程实验室`，共 239 篇，时间跨度 2025-09-29 → 2026-09-24，正文中位数约 3900 字
+  - 全部带 frontmatter（title/date/tags/status），**没有 slug**，文件名是中文 → 每篇需要生成英文 slug（§5.11）
+  - **113 篇引用了 `mmbiz.qpic.cn` 图片，共 867 张**。微信图床有防盗链，外站直接引用会裂图，必须下载后转存
+  - 正文开头带公众号导出残留（重复标题、"原创 louwill AI编程实验室 …"、原文地址），导入时要清掉
+  - 标签 Top：claude-code 83 / vibe-coding 41 / agent 36 / codex 21 / skills 12 / 科研 12
+  - vault 下还有一个独立的 `website/`（"AI编程实验室官网"，含 articles-data.js），与本站的关系待定
+- 开源项目（月下载量，npm，2026-08-27 → 09-25）：
+  - `token-watcher` v1.8.0，1491 次/月，面向各家 AI 编程 Agent 的本地 token 用量看板，repo `luwill/token-watcher`
+  - `claude-code-model-router`（ccmr）v1.21.0，903 次/月，把 Claude Code 请求路由到多个模型的轻量网关，repo `luwill/Claude-Code-Model-Router`
+- 飞书数据表（文章阅读数据）需要登录，⏸️ 待用户导出 CSV
+
+## Stage 7 — 修地基 ✅（2026-09-27 完成，未提交）
+
+- [x] 作者邮箱从公开 API 和文章页源码里移除（`lib/posts.ts` 与 4 个 API 路由去掉 `email` 字段，同步删掉类型定义）
+- [x] `POST /api/posts/slug/[slug]/view` 接限流：新增 `viewLimiter`（同一 IP 每分钟 20 次），检查放在函数体最前面；非 P2025 错误改走 `handleApiError`
+- [x] `like` 的查询和更新都补上 `published: true`；删除 `db:reset` script
+- [x] `/blog` SSR 空壳：Suspense fallback 改为按默认筛选渲染完整列表（`BlogListView`），URL 筛选逻辑移到 `BlogListWithParams`
+- [x] `sitemap.ts` 加 `revalidate = 3600`
+- [x] `seo.ts` 新增 `SITE_LANGUAGE` / `OG_LOCALE` 常量，`<html lang>`、OG locale、`inLanguage` 统一为 zh-CN
+- [x] `handleApiError` 在所有环境都记录完整错误，返回给客户端的 message 仍按环境脱敏
+
+验证记录：type-check ✅ / lint ✅ / 16GB turbopack 构建 ✅（20 页，路由表无变化）/ 预渲染 `blog.html` 文章链接 0 → 3，`html lang="zh-CN"` ✅ / manifest：`/sitemap.xml` revalidate False → 3600 ✅ / `next start` 实测：文章页、`/api/search`、`/api/posts` 均无邮箱 ✅；like 不存在 id → 404 ✅；view 连续 22 次（用不存在的 slug，不写库）→ 前 20 次 404、第 21 次起 429 ✅；不存在文章 → 404 ✅
+未做：暗/亮主题 × zh/en 的目视检查（§7.B）。`/blog` 默认视图的标记与改动前一致，风险低
+
+## Stage 8 — 国内可访问性评估 ⬜（在大规模导入前完成）
+
+- [ ] 在国内多地实测 louwill.com 的可达性与首屏时间（Vercel 在大陆不稳定，且无法备案）
+- [ ] 根据结果选定：维持 Vercel / 前置国内 CDN / 迁移到国内托管。这个决定同时决定 Stage 9 图片转存到哪里
+
+## Stage 9 — 文章精选与导入管线 ⬜
+
+- [ ] 选文标准（待用户确认）：优先常青内容（教程、方法论、工作流），其次是与课程主题重合的内容（claude-code / vibe-coding / agent / skills）；时效性强的新闻快讯默认不收；再结合飞书阅读数据排序。首批目标 30–50 篇
+- [ ] 导入脚本（放 `scripts/`，走 npm script）：清理导出残留 → 生成 slug → 图片下载并转存、改写链接 → 转成 post-cli 可用的 frontmatter → 先 `--dry-run` 全量检查
+- [ ] 分类体系：用 4–6 个稳定分类替代空表（例如 Claude Code / Vibe Coding / Agent / AI 科研 / 观点），标签保持细粒度
+- [ ] 保留 `createdAt` 为公众号原发日期；每篇文末附原文链接
+- [ ] 真实写库需用户按清单批准（§3.5）
+
+## Stage 10 — 个人 IP 枢纽 ⬜
+
+- [ ] 首页改版：一句话定位 → 证据（课程、开源下载量、公众号）→ 精选文章 → 主 CTA（课程）
+- [ ] `/projects` 页：token-watcher、ccmr，展示简介、安装命令、GitHub/npm 链接和下载量（构建期或 ISR 拉取 npm API）
+- [ ] 文章末尾统一 CTA 区块：公众号二维码 + 课程入口
+- [ ] `/links` 页：作为小红书/X/公众号主页链接的落地页，各入口带 UTM
+- [ ] About 文案与首页定位统一
+
+## Stage 11 — 课程转化页 ⬜
+
+- [ ] 课程页补报名/购买出口（外链到现有售卖平台，不在站内做支付，保持 §0 "无后台、无认证"）
+- [ ] 课程页补充：适合谁、能学到什么、试看内容、学员反馈
+
+## Stage 12 — 统计与归因 ⬜
+
+- [ ] 引入第三方统计替代自研埋点（新外部服务，需用户确认选型）；停掉双计
+- [ ] 旧 `page_views` / `online_users` 表的存废由用户决定（DB 操作）
+
+## 已确认（2026-09-27）
+
+- 课程尚未上线，计划放在**飞书付费知识库**售卖。上线前课程页 CTA 用「关注公众号获取开课通知」，上线后换成知识库链接
+- 选文标准与首批 30–50 篇：认可
+- 阅读数据来源：飞书多维表格「AI编程实验室」里的「文章累计阅读」表，共 153 条。字段有发表日期、内容标题、阅读人数（全部 / 公众号消息 / 朋友圈 / 聊天会话 / 公众号主页 / 推荐 / 搜一搜 / 其他）、各渠道占比。表格是 canvas 渲染，页面上抓不到数据；自动化点击导出菜单会自己收起，所以需要用户手动导出 CSV
+
+## 待用户决定
+
+1. ⏸️ 导出「文章累计阅读」表为 CSV
+2. vault 里的"AI编程实验室官网"和本站是什么关系：合并、互链，还是另有用途
+
 ## 全局注意事项
 
 - 本项目无测试框架，全局 TDD/80% 覆盖率规则暂无法执行；如需补测试基建（Vitest），列为后续独立事项

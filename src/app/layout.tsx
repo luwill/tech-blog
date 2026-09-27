@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { LocaleProvider } from "@/components/providers/locale-provider";
 import { AnalyticsTracker } from "@/components/analytics/analytics-tracker";
-import { generateWebsiteStructuredData } from "@/lib/seo";
+import { generateWebsiteStructuredData, SITE_LANGUAGE, OG_LOCALE } from "@/lib/seo";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: 'website',
-    locale: 'en_US',
+    locale: OG_LOCALE,
     url: 'https://www.louwill.com',
     title: "LouWill's Tech Blog",
     description: "AI Algorithm Engineer sharing insights on technology, AI algorithms, and product reviews.",
@@ -70,7 +70,7 @@ export default function RootLayout({
   const websiteStructuredData = generateWebsiteStructuredData()
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={SITE_LANGUAGE} suppressHydrationWarning>
       <head>
         <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
         <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />

@@ -14,6 +14,10 @@ interface SEOConfig {
   tags?: string[]
 }
 
+// 正文与受众均为中文；UI 文案的 en/zh 切换不改变内容语言
+export const SITE_LANGUAGE = 'zh-CN'
+export const OG_LOCALE = 'zh_CN'
+
 const DEFAULT_SEO = {
   title: "LouWill's Tech Blog",
   description: "AI Algorithm Engineer & Full Stack Developer sharing insights on artificial intelligence, machine learning, and cutting-edge technology trends.",
@@ -64,7 +68,7 @@ export function generateSEO(config: SEOConfig): Metadata {
           alt: title
         }
       ],
-      locale: 'en_US',
+      locale: OG_LOCALE,
       type: type === 'article' ? 'article' : 'website',
       ...(type === 'article' && {
         publishedTime,
@@ -162,7 +166,7 @@ export function generateArticleStructuredData(article: {
     keywords: article.tags?.join(', '),
     wordCount: article.content.split(/\s+/).length,
     timeRequired: article.readTime ? `PT${article.readTime}M` : undefined,
-    inLanguage: 'en-US',
+    inLanguage: SITE_LANGUAGE,
     isAccessibleForFree: true,
     license: 'https://creativecommons.org/licenses/by/4.0/'
   }

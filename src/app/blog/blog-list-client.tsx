@@ -50,38 +50,70 @@ interface BlogListClientProps {
   categories: CategoryWithCount[]
 }
 
+const DEFAULT_CATEGORY = 'all'
+const DEFAULT_SORT = 'newest'
+
+// 预渲染阶段 useSearchParams 会让 Suspense 边界退回 fallback，
+// 所以 fallback 按默认筛选渲染完整列表，保证 SSR/ISR 的 HTML 里有文章内容
 export default function BlogListClient(props: BlogListClientProps) {
   return (
-    <Suspense fallback={null}>
-      <BlogListContent {...props} />
+    <Suspense
+      fallback={
+        <BlogListView
+          {...props}
+          selectedCategory={DEFAULT_CATEGORY}
+          sortBy={DEFAULT_SORT}
+          onFilterChange={() => {}}
+        />
+      }
+    >
+      <BlogListWithParams {...props} />
     </Suspense>
   )
 }
 
-function BlogListContent({ posts, categories }: BlogListClientProps) {
-  const { t } = useLocale()
+function BlogListWithParams(props: BlogListClientProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
   // Read filter state from URL
-  const selectedCategory = searchParams.get('category') || 'all'
-  const sortBy = searchParams.get('sort') || 'newest'
+  const selectedCategory = searchParams.get('category') || DEFAULT_CATEGORY
+  const sortBy = searchParams.get('sort') || DEFAULT_SORT
 
   // Update URL when filters change
   const updateFilters = useCallback((category: string, sort: string) => {
     const params = new URLSearchParams()
-    if (category !== 'all') params.set('category', category)
-    if (sort !== 'newest') params.set('sort', sort)
+    if (category !== DEFAULT_CATEGORY) params.set('category', category)
+    if (sort !== DEFAULT_SORT) params.set('sort', sort)
     const queryString = params.toString()
     router.push(queryString ? `/blog?${queryString}` : '/blog', { scroll: false })
   }, [router])
 
+  return (
+    <BlogListView
+      {...props}
+      selectedCategory={selectedCategory}
+      sortBy={sortBy}
+      onFilterChange={updateFilters}
+    />
+  )
+}
+
+interface BlogListViewProps extends BlogListClientProps {
+  selectedCategory: string
+  sortBy: string
+  onFilterChange: (category: string, sort: string) => void
+}
+
+function BlogListView({ posts, categories, selectedCategory, sortBy, onFilterChange }: BlogListViewProps) {
+  const { t } = useLocale()
+
   const setSelectedCategory = (category: string) => {
-    updateFilters(category, sortBy)
+    onFilterChange(category, sortBy)
   }
 
   const setSortBy = (sort: string) => {
-    updateFilters(selectedCategory, sort)
+    onFilterChange(selectedCategory, sort)
   }
 
   // Filter and sort posts（数据由服务端全量传入，含全部已发布文章）

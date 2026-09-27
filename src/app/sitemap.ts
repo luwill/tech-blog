@@ -1,6 +1,9 @@
 import { MetadataRoute } from 'next'
 import { db } from '@/lib/db'
 
+// 文章由 CLI 直写数据库、不触发重新部署，sitemap 必须 ISR 再生，否则新文章永远进不来
+export const revalidate = 3600
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.louwill.com'
   
