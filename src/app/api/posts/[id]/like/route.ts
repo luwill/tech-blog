@@ -17,9 +17,9 @@ export async function POST(
       )
     }
 
-    // 验证文章是否存在
+    // 验证文章存在且已发布（草稿不可点赞，也不能借此探测草稿是否存在）
     const existingPost = await db.post.findUnique({
-      where: { id },
+      where: { id, published: true },
       select: { id: true, likes: true }
     })
 
@@ -33,7 +33,7 @@ export async function POST(
     // 简单的实现：每次请求都增加点赞数
     // 在实际应用中，你可能想要追踪用户的点赞状态
     const updatedPost = await db.post.update({
-      where: { id },
+      where: { id, published: true },
       data: {
         likes: {
           increment: 1

@@ -107,8 +107,7 @@ export async function GET(request: NextRequest) {
         include: {
           author: {
             select: {
-              name: true,
-              email: true
+              name: true
             }
           },
           category: {

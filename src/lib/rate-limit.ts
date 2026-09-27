@@ -28,6 +28,8 @@ function createLimiter(requests: number, prefix: string): Ratelimit | null {
 export const likeLimiter = createLimiter(10, 'like')
 // 埋点（page-views / online-users）：同一 IP 每分钟 60 次
 export const analyticsLimiter = createLimiter(60, 'analytics')
+// 文章浏览量上报：同一 IP 每分钟 20 次（正常阅读远低于此）
+export const viewLimiter = createLimiter(20, 'view')
 
 export function getClientIp(request: Request): string {
   const forwarded = request.headers.get('x-forwarded-for')

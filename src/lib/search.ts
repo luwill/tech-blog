@@ -28,7 +28,6 @@ interface SearchResult {
     }>
     author: {
       name: string
-      email: string
     }
   }>
   pagination: {

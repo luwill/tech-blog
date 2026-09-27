@@ -18,7 +18,6 @@
     "post:unpublish": "tsx --env-file=.env.local scripts/post-cli.ts unpublish",
     "post:delete": "tsx --env-file=.env.local scripts/post-cli.ts delete",
     "post:export": "tsx --env-file=.env.local scripts/post-cli.ts export",
-    "db:reset": "prisma migrate reset --force",
     "vercel-build": "export NODE_OPTIONS='--max-old-space-size=16384' && prisma generate && next build --turbopack"
   },
   "dependencies": {

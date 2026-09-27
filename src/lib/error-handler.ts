@@ -81,10 +81,8 @@ function formatZodErrors(error: ZodError): Record<string, string[]> {
  * Main error handler for API routes
  */
 export function handleApiError(error: unknown) {
-  // Log error in development only
-  if (process.env.NODE_ENV === 'development') {
-    console.error("API Error:", error)
-  }
+  // 服务端始终记录完整错误（进 Vercel 日志）；返回给客户端的 message 在下方按环境脱敏
+  console.error("API Error:", error)
 
   // Handle Zod validation errors
   if (error instanceof ZodError) {

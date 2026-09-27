@@ -9,7 +9,7 @@ export const getPublishedPost = cache(async (slug: string) => {
   return db.post.findUnique({
     where: { slug, published: true },
     include: {
-      author: { select: { name: true, email: true } },
+      author: { select: { name: true } },
       category: { select: { id: true, name: true, slug: true } },
       tags: { select: { id: true, name: true, slug: true } },
     },
@@ -22,7 +22,7 @@ export async function getRelatedPosts(categoryId: string, excludePostId: string,
     orderBy: { createdAt: 'desc' },
     take,
     include: {
-      author: { select: { name: true, email: true } },
+      author: { select: { name: true } },
       category: { select: { id: true, name: true, slug: true } },
       tags: { select: { id: true, name: true, slug: true } },
     },

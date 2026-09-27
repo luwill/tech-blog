@@ -78,7 +78,6 @@ export interface Post {
   }>
   author: {
     name: string | null
-    email: string
   }
 }
 
