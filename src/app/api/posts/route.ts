@@ -1,15 +1,14 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { handleApiError } from "@/lib/error-handler"
+import { MAX_QUERY_OFFSET, paginationInteger } from "@/lib/pagination"
 
 // GET /api/posts - 获取文章列表
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const pageParam = parseInt(searchParams.get("page") || "1", 10)
-    const limitParam = parseInt(searchParams.get("limit") || "10", 10)
-    const page = Number.isNaN(pageParam) ? 1 : Math.max(pageParam, 1)
-    const limit = Number.isNaN(limitParam) ? 10 : Math.min(Math.max(limitParam, 1), 50)
+    const limit = paginationInteger(searchParams.get("limit"), 10, 1, 50)
+    const page = paginationInteger(searchParams.get("page"), 1, 1, Math.floor(MAX_QUERY_OFFSET / limit) + 1)
     const category = searchParams.get("category")
     const tag = searchParams.get("tag")
 

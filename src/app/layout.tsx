@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { LocaleProvider } from "@/components/providers/locale-provider";
 import { AnalyticsTracker } from "@/components/analytics/analytics-tracker";
 import { generateWebsiteStructuredData, SITE_LANGUAGE, OG_LOCALE } from "@/lib/seo";
+import { serializeJsonLd } from "@/lib/json-ld";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -76,7 +77,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteStructuredData) }}
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(websiteStructuredData) }}
         />
       </head>
       <body

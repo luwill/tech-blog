@@ -8,8 +8,8 @@
  *   npm run post:delete -- <slug> --yes                       删除文章（必须显式 --yes）
  *   npm run post:export -- <slug> [outfile.md]                导出为带 frontmatter 的 markdown
  *
- * frontmatter 支持字段: title(必填), date, category, tags, excerpt, published, featured, slug
- * 中文标题的文件请在 frontmatter 里显式提供 slug。
+ * frontmatter 支持字段: title(必填), date, category, categorySlug, tags, excerpt, published, featured, slug
+ * 中文标题的文件请在 frontmatter 里显式提供 slug；中文分类名同理需要 categorySlug。
  */
 import { readFile, writeFile } from 'node:fs/promises'
 import { basename } from 'node:path'
@@ -50,6 +50,10 @@ async function publish(args: string[]) {
   if (!content.trim()) {
     throw new Error('Post content is empty')
   }
+  // 必须在任何数据库查询之前拒绝预览/失败产物，--draft 也不能绕过。
+  if (frontmatter.importStatus && frontmatter.importStatus !== 'ready') {
+    throw new Error(`Import is ${frontmatter.importStatus}; complete image conversion before publishing.`)
+  }
 
   const slug = frontmatter.slug || slugFromFilename(basename(file))
   if (!slug) {
@@ -63,11 +67,14 @@ async function publish(args: string[]) {
     ? new Date(frontmatter.date)
     : undefined
 
+  // 中文分类名派生不出 slug，必须在 dry-run 阶段就拦下
+  buildCategoryData(frontmatter.category, frontmatter.categorySlug)
+
   const existing = await db.post.findUnique({ where: { slug }, select: { id: true, title: true } })
 
   console.log(`${existing ? '🔄 Update' : '🆕 Create'}: "${frontmatter.title}"`)
   console.log(`   slug: ${slug} | published: ${published} | readTime: ${readTime}min`)
-  console.log(`   category: ${frontmatter.category ?? '(none)'} | tags: ${frontmatter.tags?.join(', ') ?? '(none)'}`)
+  console.log(`   category: ${frontmatter.category ?? '(none)'}${frontmatter.categorySlug ? ` (${frontmatter.categorySlug})` : ''} | tags: ${frontmatter.tags?.join(', ') ?? '(none)'}`)
 
   if (dryRun) {
     console.log('🏜️  Dry run — no database writes.')
@@ -75,15 +82,7 @@ async function publish(args: string[]) {
   }
 
   const authorId = await resolveAuthorId()
-
-  const categoryData = frontmatter.category
-    ? {
-        connectOrCreate: {
-          where: { name: frontmatter.category },
-          create: { name: frontmatter.category, slug: generateSlug(frontmatter.category) },
-        },
-      }
-    : undefined
+  const categoryData = buildCategoryData(frontmatter.category, frontmatter.categorySlug)
 
   const tagConnections = (frontmatter.tags ?? []).map(name => ({
     where: { name },
@@ -120,6 +119,20 @@ async function publish(args: string[]) {
       })
 
   console.log(`✅ ${existing ? 'Updated' : 'Published'}: /blog/${post.slug}`)
+}
+
+function buildCategoryData(name?: string, explicitSlug?: string) {
+  if (!name) return undefined
+  const slug = explicitSlug || generateSlug(name)
+  if (!slug) {
+    throw new Error(`Cannot derive slug for category "${name}". Add \`categorySlug: "..."\` to frontmatter.`)
+  }
+  return {
+    connectOrCreate: {
+      where: { name },
+      create: { name, slug },
+    },
+  }
 }
 
 async function list(args: string[]) {
@@ -179,7 +192,7 @@ async function exportPost(args: string[]) {
 
   const post = await db.post.findUnique({
     where: { slug },
-    include: { category: { select: { name: true } }, tags: { select: { name: true } } },
+    include: { category: { select: { name: true, slug: true } }, tags: { select: { name: true } } },
   })
   if (!post) throw new Error(`Post not found: ${slug}`)
 

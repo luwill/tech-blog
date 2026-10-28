@@ -2,15 +2,22 @@
  * Frontmatter parsing and generation utilities for Markdown import/export
  */
 
+import { parseDocument } from 'yaml'
+import { z } from 'zod'
+
+export type ImportStatus = 'ready' | 'failed' | 'preview'
+
 export interface Frontmatter {
   title: string
   date: string
   category?: string
+  categorySlug?: string
   tags?: string[]
   excerpt?: string
   published?: boolean
   featured?: boolean
   slug?: string
+  importStatus?: ImportStatus
 }
 
 export interface ParsedMarkdown {
@@ -53,105 +60,44 @@ export function parseFrontmatter(markdown: string): ParsedMarkdown {
   }
 }
 
-/**
- * Simple YAML parser for frontmatter
- * Handles basic key-value pairs and arrays
- */
+const FrontmatterSchema = z.object({
+  title: z.string().default(''),
+  date: z.string().default(() => new Date().toISOString().split('T')[0]),
+  category: z.string().optional(),
+  categorySlug: z.string().optional(),
+  tags: z.array(z.string()).optional(),
+  excerpt: z.string().optional(),
+  published: z.boolean().optional(),
+  featured: z.boolean().optional(),
+  slug: z.string().optional(),
+  importStatus: z.enum(['ready', 'failed', 'preview']).optional(),
+})
+
+function yamlDocument(yaml: string) {
+  const doc = parseDocument(yaml, { version: '1.2', uniqueKeys: true })
+  if (doc.errors.length > 0) throw new Error(`Invalid frontmatter YAML: ${doc.errors[0].message}`)
+  return doc
+}
+
 function parseYaml(yaml: string): Frontmatter {
-  const result: Record<string, unknown> = {}
-  const lines = yaml.split('\n')
-  let currentKey: string | null = null
-  let currentArray: string[] | null = null
-
-  for (const line of lines) {
-    // Skip empty lines
-    if (!line.trim()) continue
-
-    // Check for array item
-    if (line.match(/^\s+-\s+/)) {
-      const value = line.replace(/^\s+-\s+/, '').trim()
-      if (currentArray && currentKey) {
-        currentArray.push(removeQuotes(value))
-      }
-      continue
-    }
-
-    // Check for key-value pair
-    const keyValueMatch = line.match(/^(\w+):\s*(.*)$/)
-    if (keyValueMatch) {
-      // Save previous array if any
-      if (currentKey && currentArray) {
-        result[currentKey] = currentArray
-      }
-
-      currentKey = keyValueMatch[1]
-      const value = keyValueMatch[2].trim()
-
-      // Check if value is an inline array [item1, item2]
-      if (value.startsWith('[') && value.endsWith(']')) {
-        const arrayItems = value
-          .slice(1, -1)
-          .split(',')
-          .map(item => removeQuotes(item.trim()))
-          .filter(item => item.length > 0)
-        result[currentKey] = arrayItems
-        currentArray = null
-      } else if (value === '' || value === '[]') {
-        // Empty value or empty array - start collecting array items
-        currentArray = []
-      } else {
-        // Simple value
-        result[currentKey] = parseValue(value)
-        currentArray = null
-      }
-    }
+  // 标准 YAML 保留带引号的布尔/数字和数组里的逗号，禁止别名展开。
+  const value: unknown = yamlDocument(yaml).toJS({ maxAliasCount: 0 })
+  const parsed = FrontmatterSchema.safeParse(value)
+  if (!parsed.success) {
+    const errors = parsed.error.issues.map(issue => `${issue.path.join('.')}: ${issue.message}`)
+    throw new Error(`Invalid frontmatter: ${errors.join('; ')}`)
   }
-
-  // Save last array if any
-  if (currentKey && currentArray) {
-    result[currentKey] = currentArray
-  }
-
-  return {
-    title: (result.title as string) || '',
-    date: (result.date as string) || new Date().toISOString().split('T')[0],
-    category: result.category as string | undefined,
-    tags: result.tags as string[] | undefined,
-    excerpt: result.excerpt as string | undefined,
-    published: result.published as boolean | undefined,
-    featured: result.featured as boolean | undefined,
-    slug: result.slug as string | undefined
-  }
+  return parsed.data
 }
 
-/**
- * Remove surrounding quotes from a string
- */
-function removeQuotes(str: string): string {
-  if ((str.startsWith('"') && str.endsWith('"')) ||
-      (str.startsWith("'") && str.endsWith("'"))) {
-    return str.slice(1, -1)
-  }
-  return str
-}
-
-/**
- * Parse a YAML value into appropriate type
- */
-function parseValue(value: string): string | boolean | number {
-  // Remove quotes
-  const unquoted = removeQuotes(value)
-
-  // Boolean
-  if (unquoted.toLowerCase() === 'true') return true
-  if (unquoted.toLowerCase() === 'false') return false
-
-  // Number
-  if (!isNaN(Number(unquoted)) && unquoted !== '') {
-    return Number(unquoted)
-  }
-
-  return unquoted
+/** 保留原始元数据；预览或迁图失败必须同时标记状态并降为草稿。 */
+export function markImportStatus(markdown: string, status: ImportStatus): string {
+  const match = markdown.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/)
+  if (!match) throw new Error('Imported markdown must have frontmatter')
+  const doc = yamlDocument(match[1])
+  doc.set('importStatus', status)
+  if (status !== 'ready') doc.set('published', false)
+  return `---\n${doc.toString()}---\n\n${match[2]}`
 }
 
 /**
@@ -160,7 +106,7 @@ function parseValue(value: string): string | boolean | number {
 export function generateFrontmatter(post: {
   title: string
   createdAt: Date | string
-  category?: { name: string } | null
+  category?: { name: string; slug?: string } | null
   tags?: { name: string }[]
   excerpt?: string | null
   published?: boolean
@@ -181,6 +127,9 @@ export function generateFrontmatter(post: {
   // Category
   if (post.category?.name) {
     lines.push(`category: "${escapeYamlString(post.category.name)}"`)
+    if (post.category.slug) {
+      lines.push(`categorySlug: "${escapeYamlString(post.category.slug)}"`)
+    }
   }
 
   // Tags
@@ -212,10 +161,8 @@ export function generateFrontmatter(post: {
  * Escape special characters in YAML strings
  */
 function escapeYamlString(str: string): string {
-  return str
-    .replace(/\\/g, '\\\\')
-    .replace(/"/g, '\\"')
-    .replace(/\n/g, '\\n')
+  // JSON 双引号转义是 YAML 1.2 的子集，也覆盖制表符与回车。
+  return JSON.stringify(str).slice(1, -1)
 }
 
 /**
@@ -225,7 +172,7 @@ export function toMarkdownFile(post: {
   title: string
   content: string
   createdAt: Date | string
-  category?: { name: string } | null
+  category?: { name: string; slug?: string } | null
   tags?: { name: string }[]
   excerpt?: string | null
   published?: boolean
@@ -241,6 +188,11 @@ export function toMarkdownFile(post: {
  */
 export function validateFrontmatter(fm: Frontmatter): FrontmatterValidationResult {
   const errors: string[] = []
+
+  const parsed = FrontmatterSchema.safeParse(fm)
+  if (!parsed.success) {
+    return { isValid: false, errors: parsed.error.issues.map(issue => `${issue.path.join('.')}: ${issue.message}`) }
+  }
 
   if (!fm.title || fm.title.trim() === '') {
     errors.push('Title is required')

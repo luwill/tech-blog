@@ -13,7 +13,7 @@ import {
   Calendar,
   Clock
 } from 'lucide-react'
-import { trackPageView } from '@/lib/analytics'
+import { serializeJsonLd } from '@/lib/json-ld'
 import { generateArticleStructuredData, generateBreadcrumbStructuredData } from '@/lib/seo'
 import { TableOfContents } from '@/components/blog/TableOfContents'
 import { GiscusComments } from '@/components/blog/GiscusComments'
@@ -88,12 +88,11 @@ interface BlogPostClientProps {
 
 export default function BlogPostClient({ post, relatedPosts }: BlogPostClientProps) {
   useEffect(() => {
-    // 埋点 + 浏览量上报（写操作已从文章 GET 路径剥离到独立端点）
-    trackPageView(`/blog/${post.slug}`, post.title)
+    // 全站 PV 由根布局 AnalyticsTracker 统一上报；这里只上报文章浏览量。
     fetch(`/api/posts/slug/${post.slug}/view`, { method: 'POST' }).catch(() => {
       // 上报失败不影响阅读
     })
-  }, [post.slug, post.title])
+  }, [post.slug])
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -129,11 +128,11 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
       {/* Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleStructuredData) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(articleStructuredData) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbStructuredData) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbStructuredData) }}
       />
 
       <HeaderSimple />

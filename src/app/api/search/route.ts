@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { MAX_QUERY_OFFSET, paginationInteger } from '@/lib/pagination'
 
 export async function GET(request: NextRequest) {
   try {
@@ -8,8 +9,8 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get('category')
     const tag = searchParams.get('tag')
     const sortBy = searchParams.get('sort') || 'relevance'
-    const limit = Math.min(parseInt(searchParams.get('limit') || '10'), 50)
-    const offset = Math.max(parseInt(searchParams.get('offset') || '0'), 0)
+    const limit = paginationInteger(searchParams.get('limit'), 10, 1, 50)
+    const offset = paginationInteger(searchParams.get('offset'), 0, 0, MAX_QUERY_OFFSET)
 
     if (!query && !category && !tag) {
       return NextResponse.json({

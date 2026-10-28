@@ -1,0 +1,227 @@
+{
+  "categories": {
+    "claude-code": {
+      "name": "Claude Code 实战"
+    },
+    "agent-engineering": {
+      "name": "Agent 工程"
+    },
+    "vibe-coding": {
+      "name": "Vibe Coding 方法论"
+    },
+    "ai-research": {
+      "name": "AI 科研"
+    },
+    "tools": {
+      "name": "工具与基建"
+    }
+  },
+  "posts": [
+    {
+      "file": "CLAUDE_md决定了你Vibe_Coding的开发风格和效率.md",
+      "slug": "claude-md-guide",
+      "category": "claude-code"
+    },
+    {
+      "file": "用Subagents打造Claude_Code专业开发团队.md",
+      "slug": "claude-code-subagents-team",
+      "category": "claude-code"
+    },
+    {
+      "file": "Claude_Skills使用教程_AI_Agent终于迎来可复用的工作流引擎.md",
+      "slug": "claude-skills-tutorial",
+      "category": "claude-code"
+    },
+    {
+      "file": "10个Vibe_Coding效率翻倍的Claude_Code使用技巧_.md",
+      "slug": "claude-code-10-tips",
+      "category": "claude-code"
+    },
+    {
+      "file": "Context_Engineering_来自Anthropic和Manus的实践经验总结.md",
+      "slug": "context-engineering-anthropic-manus",
+      "category": "agent-engineering"
+    },
+    {
+      "file": "Vibe_Coding___SDD（规范驱动开发）_也许是新手入门AI编程最有效的方式.md",
+      "slug": "vibe-coding-sdd",
+      "category": "vibe-coding"
+    },
+    {
+      "file": "Claude_Code_plugins_打包一切的插件系统怎么用_.md",
+      "slug": "claude-code-plugins",
+      "category": "claude-code"
+    },
+    {
+      "file": "使用Claude_Code搭建SCI论文写作工作流.md",
+      "slug": "sci-paper-writing-workflow",
+      "category": "ai-research"
+    },
+    {
+      "file": "Claude_Code同时双开Opus_4_5与国产大模型_我Vibe了一个轻量级路由工具.md",
+      "slug": "ccmr-origin",
+      "category": "tools"
+    },
+    {
+      "file": "2026年_AI编程将由Vibe_Coding转向Vibe_Engineering.md",
+      "slug": "vibe-coding-to-vibe-engineering",
+      "category": "vibe-coding"
+    },
+    {
+      "file": "2026年_用Vibe_Coding做个人产品的方法论.md",
+      "slug": "vibe-coding-personal-product",
+      "category": "vibe-coding"
+    },
+    {
+      "file": "Claude_Code之父公开了他的13个使用技巧_每一条都值得收藏.md",
+      "slug": "boris-13-claude-code-tips",
+      "category": "claude-code"
+    },
+    {
+      "file": "价值10w刀的医学科研skills合集_把Claude_Code打造成最强科研AI工具.md",
+      "slug": "medical-research-skills",
+      "category": "ai-research"
+    },
+    {
+      "file": "从Vibe_Coding到Vibe_Researching_Claude_Code也可以是最强科研工具.md",
+      "slug": "vibe-researching",
+      "category": "ai-research"
+    },
+    {
+      "file": "Claude_Code入门扫盲贴_6大基础概念.md",
+      "slug": "claude-code-basics",
+      "category": "claude-code"
+    },
+    {
+      "file": "我用Claude_Code写了一篇45页的文献综述_质量可以发一区SCI.md",
+      "slug": "claude-code-literature-review",
+      "category": "ai-research"
+    },
+    {
+      "file": "Vibe_Researching必备的科研MCP和Skills_实现10倍学术产出.md",
+      "slug": "research-mcp-skills",
+      "category": "ai-research"
+    },
+    {
+      "file": "推荐我日常高频使用的8个Skills_产出效率翻一倍.md",
+      "slug": "my-8-daily-skills",
+      "category": "tools"
+    },
+    {
+      "file": "再次提醒所有科研人_请把Claude_Code当作全方位的研究工具.md",
+      "slug": "claude-code-for-researchers",
+      "category": "ai-research"
+    },
+    {
+      "file": "新手不会用Git_你的Vibe_Coding迟早翻车.md",
+      "slug": "git-for-vibe-coders",
+      "category": "vibe-coding"
+    },
+    {
+      "file": "Claude_Code___Apify_无障碍抓取全网数据.md",
+      "slug": "claude-code-apify-web-scraping",
+      "category": "claude-code"
+    },
+    {
+      "file": "OpenClaw___Claude_Code_Codex_打造个人开发Agent_Swarm.md",
+      "slug": "personal-agent-swarm",
+      "category": "agent-engineering"
+    },
+    {
+      "file": "tmux_Vibe_Coding时代的最佳跨平台终端基建.md",
+      "slug": "tmux-for-vibe-coding",
+      "category": "tools"
+    },
+    {
+      "file": "Agent_Reach_可能是Claude_Code_OpenClaw最好的联网工具.md",
+      "slug": "agent-reach",
+      "category": "tools"
+    },
+    {
+      "file": "2026年_写给所有人的Vibe_Coding工具路径图.md",
+      "slug": "vibe-coding-tool-roadmap-2026",
+      "category": "vibe-coding"
+    },
+    {
+      "file": "84条Claude_Code最佳实践_我挑了10条最值得用的.md",
+      "slug": "claude-code-best-practices-top10",
+      "category": "claude-code"
+    },
+    {
+      "file": "Claude_Code___CLI_Anything_一行命令将任意软件转换为CLI.md",
+      "slug": "claude-code-cli-anything",
+      "category": "claude-code"
+    },
+    {
+      "file": "Claude_Code加Obsidian_打造全方位的内容创作管理系统.md",
+      "slug": "claude-code-obsidian-content-system",
+      "category": "claude-code",
+      "title": "Claude Code + Obsidian，打造个人一站式内容创作管理引擎"
+    },
+    {
+      "file": "分享3个在手机上使用Claude Code的方案，随时随地Vibe Coding.md",
+      "slug": "claude-code-on-mobile",
+      "category": "claude-code"
+    },
+    {
+      "file": "Claude Code + Agent Teams，并行任务的最佳实践.md",
+      "slug": "claude-code-agent-teams",
+      "category": "claude-code"
+    },
+    {
+      "file": "Codex最佳实践_关键是把它当队友调教.md",
+      "slug": "codex-best-practices",
+      "category": "vibe-coding"
+    },
+    {
+      "file": "推荐两个Vibe_Coding时统计token用量的开源工具.md",
+      "slug": "token-usage-tools",
+      "category": "tools"
+    },
+    {
+      "file": "Claude_Workflows，顶级harness框架.md",
+      "slug": "claude-workflows-harness",
+      "category": "agent-engineering",
+      "title": "Claude的workflows功能，是一套顶级的harness设计"
+    },
+    {
+      "file": "Claude Code并行Agents的四大方案。.md",
+      "slug": "claude-code-parallel-agents",
+      "category": "claude-code",
+      "title": "Claude Code并行Agents的四种方案对比，怎样才能按需开团"
+    },
+    {
+      "file": "Agent开发技术栈全景图_难的从来不是模型_是外面那层壳.md",
+      "slug": "agent-tech-stack",
+      "category": "agent-engineering"
+    },
+    {
+      "file": "Claude_Code与Codex的上下文压缩_一场逆向和一场benchmark.md",
+      "slug": "context-compaction-claude-code-codex",
+      "category": "agent-engineering"
+    },
+    {
+      "file": "Claude_Code验证环_把你每天的手动检查写成skill.md",
+      "slug": "claude-code-verification-loop",
+      "category": "claude-code"
+    },
+    {
+      "file": "lit-search_能说清自己漏了什么的文献检索skill.md",
+      "slug": "lit-search-skill",
+      "category": "ai-research",
+      "title": "/lit-search，专用于文献检索的科研skill"
+    },
+    {
+      "file": "如何最大化Claude Code会话价值，来自官方的技术教程.md",
+      "slug": "claude-code-session-value",
+      "category": "claude-code",
+      "title": "如何最大化Claude Code会话价值，来自Anthropic官方的技术教程"
+    },
+    {
+      "file": "分享五个实用的Claude_Code小众斜杠命令.md",
+      "slug": "claude-code-slash-commands",
+      "category": "claude-code",
+      "title": "分享5个小众但非常实用的Claude Code斜杠命令"
+    }
+  ]
+}
