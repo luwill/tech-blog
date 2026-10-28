@@ -1,6 +1,6 @@
 /**
  * Blog Post Page Layout Styles
- * Two-column layout with TOC sidebar
+ * Centered article with an optional TOC in the outer margin
  */
 
 /* ========================================
@@ -51,8 +51,7 @@
 }
 
 /* ========================================
- * CONTENT SECTION - TWO COLUMN LAYOUT
- * Reference: guangzhengli.com layout
+ * CONTENT SECTION - CENTERED READING COLUMN
  * ======================================== */
 .contentSection {
   flex: 1;
@@ -60,23 +59,15 @@
 }
 
 .contentContainer {
-  max-width: 72rem; /* max-w-6xl for outer container */
+  max-width: 56rem; /* 与标题共用相同的阅读宽度 */
   margin: 0 auto;
   padding: 0 1.5rem; /* px-6 */
 }
 
 .contentGrid {
+  position: relative;
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
-}
-
-/* Desktop: Two-column layout with 300px TOC sidebar */
-@media (min-width: 1280px) {
-  .contentGrid {
-    grid-template-columns: 1fr 300px;
-    gap: 3rem;
-  }
+  grid-template-columns: minmax(0, 1fr);
 }
 
 /* ========================================
@@ -98,9 +89,15 @@
   display: none;
 }
 
-@media (min-width: 1280px) {
+/* 宽屏目录使用正文外侧留白，不参与正文的居中计算。 */
+@media (min-width: 1536px) {
   .sidebar {
     display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(100% + 2rem);
+    width: 15rem;
   }
 }
 

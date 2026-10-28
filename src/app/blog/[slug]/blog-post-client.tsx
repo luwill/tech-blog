@@ -155,11 +155,11 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
           </div>
         </section>
 
-        {/* Content Section with Two-Column Layout */}
+        {/* Centered reading column with an outer-margin TOC on wide screens */}
         <section className={styles.contentSection}>
           <div className={styles.contentContainer}>
             {/* Mobile TOC - Outside grid for proper positioning */}
-            <div className="xl:hidden mb-6">
+            <div className="2xl:hidden mb-6">
               <TableOfContents content={post.content} />
             </div>
 
